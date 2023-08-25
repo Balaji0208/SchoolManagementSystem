@@ -16,9 +16,15 @@ namespace SchoolManagementSystem.Data
     
       
 
-        public DbSet<RoleDetails> RoleMaster { get; set; }
-        public DbSet<User> LocalUsers { get; set; }
+        public DbSet<RoleDetails> RoleDetails { get; set; }
+        public DbSet<User> Users { get; set; }
 
-       
+        public DbSet<Register> Register { get; set; }
+        public DbSet<Categories> Categories { get; set; }
+
+
+
+
+
     }
 }

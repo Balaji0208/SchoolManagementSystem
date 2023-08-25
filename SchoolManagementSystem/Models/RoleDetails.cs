@@ -8,7 +8,9 @@ namespace SchoolManagementSystem.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RoleId { get; set; }
-        
+
+        [MaxLength(20)]
+        [Required]
         public string RoleName { get; set; }
 
         public int CreatedBy { get; set; }

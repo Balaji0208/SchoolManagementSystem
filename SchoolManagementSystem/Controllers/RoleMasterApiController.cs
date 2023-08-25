@@ -37,7 +37,7 @@ namespace SchoolManagementSystem.Controllers
 
             try
             {
-                List<RoleDetails> roleListDTO = await _rolemasterRepository.GetAllAsync();
+                List<RoleDetails> roleListDTO = await _rolemasterRepository.GetAllAsync(u=>u.StatusFlag == false);
                 if (roleListDTO == null)
                 {
                     _response.StatusCode = HttpStatusCode.BadRequest;
@@ -69,7 +69,7 @@ namespace SchoolManagementSystem.Controllers
             if (RoleId == 0)
             {
 
-                _response.Messages.Add("Roke ID is Null");
+                _response.Messages.Add("Role ID is Null");
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 return BadRequest(_response);
             }
@@ -102,8 +102,9 @@ namespace SchoolManagementSystem.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
-        [Route("api/RoleMasterAPI/CreateRole")]
+        //[Authorize(Roles = "Admin")]
+       [Authorize(Roles = "Register")]
+        [Route("api/RoleMasterAPI/Create")]
 
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
@@ -136,12 +137,12 @@ namespace SchoolManagementSystem.Controllers
 
 
 
-                await _rolemasterRepository.CreateAsync(Role);
+                await _rolemasterRepository.CreateAsync(Role,_loginUserid);
 
                 _response.Result = _mapper.Map<RoleDetailsDTO>(Role);
                 _response.StatusCode = HttpStatusCode.Created;
 
-                return CreatedAtRoute("Get", new { id = Role.RoleId }, _response);
+                return Ok(rolemasterDTO);
             }
             catch (Exception ex)
             {
@@ -181,7 +182,7 @@ namespace SchoolManagementSystem.Controllers
                 }
                 
                 Role.StatusFlag = true;
-                await _rolemasterRepository.UpdateAsync(Role);
+                await _rolemasterRepository.UpdateAsync(Role,_loginUserid);
                 _response.StatusCode = HttpStatusCode.NoContent;
                 _response.IsSuccess = true;
 
@@ -220,7 +221,7 @@ namespace SchoolManagementSystem.Controllers
               
                 RoleDetails model = _mapper.Map<RoleDetails>(rolemaster);
                
-                await _rolemasterRepository.UpdateAsync(model);
+                await _rolemasterRepository.UpdateAsync(model, _loginUserid);
                 _response.StatusCode = HttpStatusCode.NoContent;
                 _response.IsSuccess = true;
                 return Ok(_response);

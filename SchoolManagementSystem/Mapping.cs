@@ -10,6 +10,10 @@ namespace SchoolManagementSystem
         {
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<RoleDetails, RoleDetailsDTO>().ReverseMap();
+            CreateMap<LoginRequestDTO, UserDTO>().ReverseMap();
+            CreateMap<RegistrationDTO, Register>().ReverseMap();
+
+            CreateMap<CategoryDTO, Categories>().ReverseMap();
 
             CreateMap<RegistrationDTO, UserDTO>().ReverseMap();
         }

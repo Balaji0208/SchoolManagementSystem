@@ -4,44 +4,86 @@
         <div class="row text-center">
             <h1>Register</h1>
         </div>
-            <div class="row text-center">
-                <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="row text-center">
+            <div asp-validation-summary="All" class="text-danger"></div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label asp-for="Registration.FirstName" class="control-label pt-2" style="font-size:20px;"></label>
             </div>
-                <div class="row">
-                    <div class="col-2">
-                    <label asp-for="Registration.UserName" class="control-label pt-2" style="font-size:20px;"></label>
-                    </div>  
-                    <div class=" col-10 pb-3">
-                        <input asp-for="Registration.UserName" class="form-control" />
-                        <span asp-validation-for="Registration.UserName" class="text-danger" placeholder="Name..."></span>
-                    </div>
-                    <div class="col-2">
-                        <label asp-for="Registration.Name" class="control-label pt-2" style="font-size:20px;"></label>
-                    </div>
-                    <div class=" col-10 pb-3">
-                       <input asp-for="Registration.Name" class="form-control" />
-                        <span asp-validation-for="Registration.Name" class="text-danger"></span>
-                    </div>
-                    <div class="col-2">
-                        <label asp-for="Registration.Password" class="control-label pt-2" style="font-size:20px;"></label>
-                    </div>
-                        <div class=" col-10 pb-3">
-                            <input asp-for="Registration.Password" class="form-control" />
-                            <span asp-validation-for="Registration.Password" class="text-danger"></span>
-                        </div>
-                        <div class="col-2">
-                            <label asp-for="Registration.RoleId" class="control-label pt-2" style="font-size:20px;"></label>
-                            </div>
-                            <div class=" col-10 pb-3">
-                                <select asp-for="Registration.RoleId" class="form-select" asp-items="@Model.RoleList">
-                                    <option disabled selected>--Select Role--</option>
-                                </select>
-                                <span asp-validation-for="Registration.RoleId" class="text-danger"></span>
-                            </div>
-                            <div class="col-6 offset-3 pb-2">
-                                <button type="submit" class="form-control btn-success" value="Submit">Register</button>
-                            </div>
+            <div class=" col-10 pb-3">
+                <input asp-for="Registration.FirstName" class="form-control" />
+                <span asp-validation-for="Registration.FirstName" class="text-danger" placeholder="FirstName..."></span>
+            </div>
+            <div class="col-2">
+                <label asp-for="Registration.LastName" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class=" col-10 pb-3">
+                <input asp-for="Registration.LastName" class="form-control" />
+                <span asp-validation-for="Registration.LastName" class="text-danger" placeholder="LastName..."></span>
+            </div>
+            <div class="col-2">
+                <label asp-for="Registration.Email" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class=" col-10 pb-3">
+                <input asp-for="Registration.Email" class="form-control" />
+                <span asp-validation-for="Registration.Email" class="text-danger" placeholder="Email..."></span>
+            </div>
+            <div class="col-2">
+                <label asp-for="Registration.PhoneNumber" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class=" col-10 pb-3">
+                <input asp-for="Registration.PhoneNumber" class="form-control" />
+                <span asp-validation-for="Registration.PhoneNumber" class="text-danger" placeholder="Email..."></span>
+            </div>
+            <div class="col-12 col-md-2">
+                <label asp-for="Registration.Gender" class="control-label pt-2" style="font-size: 20px;"></label>
+            </div>
+            <div class="col-12 col-md-10">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" asp-for="Registration.Gender" value="Male" id="genderMale">
+                    <label class="form-check-label" for="genderMale">Male</label>
                 </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" asp-for="Registration.Gender" value="Female" id="genderFemale">
+                    <label class="form-check-label" for="genderFemale">Female</label>
+                </div>
+            </div>
+            <div class="col-2">
+                <label asp-for="Registration.DOB" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class=" col-10 pb-3">
+                <input asp-for="Registration.DOB" class="form-control" />
+                <span asp-validation-for="Registration.DOB" class="text-danger" placeholder="Email..."></span>
+            </div>
+            <div class="col-2">
+                <label asp-for="Registration.JoiningDate" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class=" col-10 pb-3">
+                <input asp-for="Registration.JoiningDate" class="form-control" />
+                <span asp-validation-for="Registration.JoiningDate" class="text-danger" placeholder="Email..."></span>
+            </div>
+            <div class="col-2">
+                <label asp-for="Registration.Address" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class=" col-10 pb-3">
+                <input asp-for="Registration.Address" class="form-control" />
+                <span asp-validation-for="Registration.Address" class="text-danger" placeholder="Address..."></span>
+            </div>
+            <div class="col-2">
+                <label asp-for="Registration.categoryId" class="container-lable pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class=" col-10 pb-3">
+                <select asp-for="Registration.categoryId" class="form-select" asp-items="@Model.CategoryList">
+                    <option disable selected>--Select Villa--</option>
+                </select>
+                <span asp-validation-for="Registration.categoryId" class="text-danger"></span>
+            </div>
+            
+            <div class="col-6 offset-3 pb-2">
+                    <button type="submit" class="form-control btn-success" value="Submit">Register</button>
+            </div>
+        </div>
     </div>
 
 

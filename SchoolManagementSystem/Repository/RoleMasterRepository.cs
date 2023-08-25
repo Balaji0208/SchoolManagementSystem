@@ -17,16 +17,22 @@ namespace SchoolManagementSystem.Repository
                 _db = db;
                 
             }
-            public async Task CreateAsync(RoleDetails entity)
+            public async Task CreateAsync(RoleDetails entity,int userId)
             {
-                await _db.AddAsync(entity);
+
+                entity.CreatedBy= userId;
+                entity.UpdatedBy= userId;
+                entity.CreatedDate= DateTime.Now;
+                entity.UpdatedDate = DateTime.Now;
+
+            await _db.AddAsync(entity);
                 await SaveAsync();
             }
 
 
         public async Task<List<RoleDetails>> GetAllAsync(Expression<Func<RoleDetails, bool>> filter = null, bool tracked = true)
         {
-            IQueryable<RoleDetails> query = _db.RoleMaster;
+            IQueryable<RoleDetails> query = _db.RoleDetails;
             if (filter != null)
             {
                 query = query.Where(filter);
@@ -39,7 +45,7 @@ namespace SchoolManagementSystem.Repository
             //"Villa,VillaSpecial"
             public async Task<RoleDetails> GetAsync(Expression<Func<RoleDetails, bool>> filter = null, bool tracked = true)
             { 
-                IQueryable<RoleDetails> query = _db.RoleMaster;
+                IQueryable<RoleDetails> query = _db.RoleDetails;
                 if (!tracked)
                 {
                     query = query.AsNoTracking();
@@ -54,16 +60,20 @@ namespace SchoolManagementSystem.Repository
                 return await query.FirstOrDefaultAsync();
             }
 
-            public async Task RemoveAsync(RoleDetails entity)
+            public async Task RemoveAsync(RoleDetails entity,int userId)
             {
-                _db.Remove(entity);
+
+                entity.UpdatedBy = userId;
+                entity.UpdatedDate = DateTime.Now;
+                _db.RoleDetails.Update(entity);
                 await SaveAsync();
 
             }
-        public async Task<RoleDetails> UpdateAsync(RoleDetails entity)
+        public async Task<RoleDetails> UpdateAsync(RoleDetails entity,int userId)
         {
+            entity.UpdatedBy = userId;
             entity.UpdatedDate = DateTime.Now;
-            _db.RoleMaster.Update(entity);
+            _db.RoleDetails.Update(entity);
             await _db.SaveChangesAsync();
             return entity;
         }

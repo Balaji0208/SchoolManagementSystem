@@ -11,6 +11,10 @@ builder.Services.AddHttpClient<IAuthService, AuthService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddHttpClient<IRoleService, RoleService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddHttpClient<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddHttpClient<IUserLoginService, UserLoginService>();
+builder.Services.AddScoped<IUserLoginService, UserLoginService>();
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

@@ -1,4 +1,7 @@
-﻿using SchoolManagementSystemWebApp.AuthService.IService;
+﻿using AutoMapper.Internal;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
+using SchoolManagementSystemWebApp.AuthService.IService;
 using SchoolManagementSystemWebApp.Models;
 using SchoolManagementSystemWebApp.Models.DTO;
 using SchoolManagementSystemWebApp.Utility;
@@ -15,8 +18,18 @@ namespace SchoolManagementSystemWebApp.AuthService
                 _clientFactory = clientFactory;
                 SchoolUrl = configuration.GetValue<string>("ServiceUrls:SchoolAPI");
             }
+        public Task<T> GetAllAsync<T>(string token)
+        {
+            return SendAsync<T>(new APIRequest()
+            {
+                ApiType = SD.ApiType.GET,
+                Url = SchoolUrl + "/api/UserApiController/GetAllRegister",
+                Token = token
 
-            public Task<T> LoginAsync<T>(LoginRequestDTO obj)
+            });
+        }
+
+        public Task<T> LoginAsync<T>(LoginRequestDTO obj)
             {
 
                 return SendAsync<T>(new APIRequest()
@@ -29,7 +42,8 @@ namespace SchoolManagementSystemWebApp.AuthService
 
             public Task<T> RegisterAsync<T>(RegistrationDTO obj, string token)
             {
-                return SendAsync<T>(new APIRequest()
+          
+            return SendAsync<T>(new APIRequest()
                 {
                     ApiType = SD.ApiType.POST,
                     Data = obj,

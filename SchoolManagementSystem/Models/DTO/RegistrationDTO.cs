@@ -1,10 +1,25 @@
-﻿namespace SchoolManagementSystem.Models.DTO
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SchoolManagementSystem.Models.DTO
 {
     public class RegistrationDTO
     {
-        public string UserName { get; set; }
-        public string Name { get; set; }
-        public string Password { get; set; }
-        public int RoleId { get; set; }
+        public int registerId { get; set; }
+
+
+        [ForeignKey("Categories")]
+        public int categoryId { get; set; }
+        public Categories Categories { get; set; }
+        public string FirstName { get; set; }
+     
+        public string LastName { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Gender { get; set; }
+        public string Email { get; set; }
+        public DateTime DOB { get; set; }
+        public string Address { get; set; }
+
+        public DateTime joiningDate { get; set; }
+
     }
 }

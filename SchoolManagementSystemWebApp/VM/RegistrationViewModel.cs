@@ -13,6 +13,6 @@ namespace SchoolManagementSystemWebApp.VM
         }
         public RegistrationDTO Registration { get; set; }
         [ValidateNever]
-        public IEnumerable<SelectListItem> RoleList { get; set; }
+        public IEnumerable<SelectListItem> CategoryList { get; set; }
     }
 }

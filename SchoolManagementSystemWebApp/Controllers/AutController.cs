@@ -10,6 +10,7 @@ using SchoolManagementSystemWebApp.Models.DTO;
 using SchoolManagementSystemWebApp.Utility;
 using SchoolManagementSystemWebApp.VM;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Security.Claims;
 
 namespace SchoolManagementSystemWebApp.Controllers
@@ -17,12 +18,24 @@ namespace SchoolManagementSystemWebApp.Controllers
     public class AuthController : Controller
     {
         private readonly IAuthService _authService;
-        private readonly IRoleService _roleService;
-        public AuthController(IAuthService authService,IRoleService roleService)
+        private readonly ICategoryService _categoryService;
+        public AuthController(IAuthService authService, ICategoryService categoryService)
         {
             _authService = authService;
-            _roleService = roleService;
+            _categoryService = categoryService;
            
+        }
+
+        public async Task<IActionResult> IndexRegister()
+        {
+            List<RegistrationDTO> list = new();
+
+            var response = await _authService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SeesionToken));
+            if (response != null && response.IsSuccess)
+            {
+                list = JsonConvert.DeserializeObject<List<RegistrationDTO>>(Convert.ToString(response.Result));
+            }
+            return View(list);
         }
 
         [HttpGet]
@@ -66,15 +79,15 @@ namespace SchoolManagementSystemWebApp.Controllers
         {
             RegistrationViewModel roleMasterVM = new();
 
-            var response = await _roleService.GetAllAsync<APIResponse>();
+            var response = await _categoryService.GetAllAsync<APIResponse>();
 
             if (response != null && response.IsSuccess)
             {
-                roleMasterVM.RoleList = JsonConvert.DeserializeObject<List<RoleDetailsDTO>>
+                roleMasterVM.CategoryList = JsonConvert.DeserializeObject<List<CategoriesDTO>>
                   (Convert.ToString(response.Result)).Select(i => new SelectListItem
                   {
-                      Text = i.RoleName,
-                      Value = i.RoleId.ToString()
+                      Text = i.CategoryName,
+                      Value = i.CategoryId.ToString()
                   });
             }
 
@@ -87,12 +100,18 @@ namespace SchoolManagementSystemWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegistrationViewModel obj)
         {
-            APIResponse result = await _authService.RegisterAsync<APIResponse>(obj.Registration, HttpContext.Session.GetString(SD.SeesionToken));
+            if (ModelState.IsValid)
+            {
+
+                APIResponse result = await _authService.RegisterAsync<APIResponse>(obj.Registration, HttpContext.Session.GetString(SD.SeesionToken));
             if (result != null && result.IsSuccess)
             {
-                ;
-                return RedirectToAction("Login");
+                    TempData["success"] = "Registered successfully";
+                    return RedirectToAction(nameof(IndexRegister));
+                }
+           
             }
+            TempData["error"] = "Error encountered.";
             return View(obj);
         }
 
@@ -101,7 +120,7 @@ namespace SchoolManagementSystemWebApp.Controllers
         {
             await HttpContext.SignOutAsync();
             HttpContext.Session.SetString(SD.SeesionToken, "");
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Auth");
         }
 
         public IActionResult AccessDenied()

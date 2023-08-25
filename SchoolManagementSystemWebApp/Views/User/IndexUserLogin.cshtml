@@ -1,0 +1,51 @@
+﻿@model IEnumerable<SchoolManagementSystemWebApp.Models.DTO.UserDTO>
+<br />
+<div class="container p-4 border">
+
+    <div class="row pb-2">
+        <div class="col">
+            <h1 class="text-primary">Register User</h1>
+
+        </div>
+        <div class="col text-end pt-1">
+            <a asp-controller="User" asp-action="UserLogin" class="btn btn-outline-primary"><i class="bi bi-plus-square-fill"></i> User Login </a>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    UserName
+                </th>
+                <th>
+                    Password
+                </th>
+                <th>
+                    RoleId
+                </th>
+               
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.UserName</td>
+                    <td>@item.Password</td>
+                    <td>@item.RoleId</td>
+                    
+                    <td>
+                        <a asp-controller="Register" asp-action="UpdateRegister" asp-route-villaId="@item.RegId" class="btn btn-success"><i class="bi bi-trash2-fill"></a>
+                        <a asp-controller="Villa" asp-action="DeleteVilla" asp-route-villaId="@item.RegId" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+

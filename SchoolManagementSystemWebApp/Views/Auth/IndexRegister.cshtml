@@ -1,0 +1,71 @@
+﻿@model IEnumerable<SchoolManagementSystemWebApp.Models.DTO.RegistrationDTO>
+<br />
+<div class="container p-4 border">
+
+    <div class="row pb-2">
+        <div class="col">
+            <h1 class="text-primary">Register User</h1>
+
+        </div>
+        <div class="col text-end pt-1">
+            <a asp-controller="Auth" asp-action="Register" class="btn btn-outline-primary align-content-end"><i class="bi bi-plus-square-fill"></i>Register User </a>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    FirstName
+                </th>
+                <th>
+                    LasttName
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    PhoneNumber
+                </th>
+                <th>
+                    Gender
+                </th>
+                <th>
+                    DOB
+                </th>
+                <th>
+                    Address
+                </th>
+                <th>
+                    Categrory
+                </th>
+                <th>
+                    JoiningDate
+                </th>
+              
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.FirstName</td>
+                    <td>@item.LastName</td>
+                    <td>@item.Email</td>
+                    <td>@item.PhoneNumber</td>
+                    <td>@item.Gender</td>
+                    <td>@item.DOB</td>
+                    <td>@item.Address</td>
+                    <td>@item.Categories.CategoryName</td>
+                    <td>@item.JoiningDate</td>
+        
+                    <td>
+                        <a asp-controller="Register" asp-action="UpdateRegister" asp-route-villaId="@item.RegId" class="btn btn-success"><i class="bi bi-trash2-fill"></a>
+                        <a asp-controller="Villa" asp-action="DeleteVilla" asp-route-villaId="@item.RegId" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+ 
