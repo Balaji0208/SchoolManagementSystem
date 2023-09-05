@@ -15,6 +15,10 @@ builder.Services.AddHttpClient<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddHttpClient<IUserLoginService, UserLoginService>();
 builder.Services.AddScoped<IUserLoginService, UserLoginService>();
+builder.Services.AddHttpClient<IStateService, StateService>();
+builder.Services.AddScoped<IStateService, StateService>();
+builder.Services.AddHttpClient<ICountryService, CountryService>();
+builder.Services.AddScoped<ICountryService, CountryService>();
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -55,6 +59,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Auth}/{action=Login}/{id?}");
+    pattern: "{controller=Auth}/{action=LogIn}/{id?}");
 
 app.Run();

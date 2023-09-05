@@ -22,9 +22,13 @@ namespace SchoolManagementSystem.Data
         public DbSet<Register> Register { get; set; }
         public DbSet<Categories> Categories { get; set; }
 
+        public DbSet<ClassMaster> ClassMaster { get; set; }
 
+        public DbSet<SubjectMaster> SubjectMaster { get; set; }
 
+        public DbSet<CountryMaster> CountryMaster { get; set; }
 
-
+        public DbSet<DistrictMaster> DistrictMaster { get; set; }
+        public DbSet<StateMaster> StateMaster { get; set; }
     }
 }

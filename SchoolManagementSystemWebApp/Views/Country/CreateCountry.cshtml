@@ -1,0 +1,39 @@
+﻿@model SchoolManagementSystemWebApp.Models.DTO.CountryMasterDTO
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<form asp-action="CreateCountry">
+
+    <h1 class="text-primary">Create Country</h1>
+    
+    <div class="row mt-3">
+        <div class="col-md-4 ">
+            <div>
+                <label for="rolename">Country Name</label>
+                <input type="text" asp-for="CountryName" class="form-control" />
+                <span asp-validation-for="CountryName" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-4 ">
+            <div>
+                <label for="rolename">Country Code</label>
+                <input type="text" asp-for="CountryCode" class="form-control" />
+                <span asp-validation-for="CountryCode" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-2 text-center">
+            <button type="submit" class="btn-lg btn-success" style="margin-left:-337px;margin-top:14px">Save</button>
+        </div>
+        <div class="col-2 justify-content-end">
+            <a asp-action="IndexCountry" asp-controller="Country" class="btn btn-secondary btn-lg" style="margin-left:-431px;margin-top:15px">Cancel</a>
+        </div>
+    </div>
+</form>
+@section Scripts   
+    {   
+    <partial name="_ValidationScriptsPartial" />
+                        }

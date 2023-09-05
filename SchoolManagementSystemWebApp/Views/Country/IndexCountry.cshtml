@@ -1,0 +1,82 @@
+﻿@model IEnumerable<SchoolManagementSystemWebApp.Models.DTO.CountryMasterDTO>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<div>
+    <div class="row pb-2">
+        <div class="col">
+            <h1 class="text-primary">Country List</h1>
+        </div>
+        <div class="col text-end pt-1">
+            <a asp-controller="Country" asp-action="CreateCountry" class="btn btn-primary" style="float:right;">
+                <i class="bi bi-plus-square-fill"></i>
+                Create 
+            </a>
+
+        </div>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                
+                <th>
+                    Country Name             
+                </th>
+                <th>
+                    Country Code
+                </th>
+                <th>
+                    Action
+
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                  
+                    <td>@item.CountryName</td>
+                    <td>@item.CountryCode</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a asp-controller="Country" asp-action="UpdateCountry" asp-route-countryId="@item.CountryId"> <span id="boot-icon" class="bi bi-pencil-fill" style="font-size: 1.5rem; color: rgb(0, 128, 55);"></span></a>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <a href="#" data-toggle="modal" data-target="#deleteModal_@item.CountryId">
+                                <span id="boot-icon" class="bi bi-trash2-fill" style="font-size: 1.5rem; color: rgb(255, 0, 0);"></span>
+                            </a>
+                        </div>
+
+
+
+                        <!-- Delete Confirmation Modal for each item -->
+                        <div class="modal fade" id="deleteModal_@item.CountryId" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete this item?                               
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <a asp-controller="Country" asp-action="DeleteCountry" asp-route-countryId="@item.CountryId" class="btn btn-danger">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </td>
+                </tr>
+
+            }       
+        </tbody>
+    </table>
+</div>
+

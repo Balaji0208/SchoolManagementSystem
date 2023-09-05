@@ -19,17 +19,59 @@ namespace SchoolManagementSystemWebApp.AuthService
             _clientFactory = clientFactory;
             SchoolUrl = configuration.GetValue<string>("ServiceUrls:SchoolAPI");
         }
-        public Task<T> GetAllAsync<T>()
+        public Task<T> GetAllAsync<T>(string token)
         {
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = SD.ApiType.GET,
-                Url = SchoolUrl + "/api/CategoryMasterAPI/GetAllCategary"
-                // Token = token
+                Url = SchoolUrl + "/api/CategoryMasterAPI/GetAllCategary",
+                 Token = token
 
             });
         }
-       
+        public Task<T> CreateAsync<T>(CategoriesDTO dto, string token)
+        {
+            return SendAsync<T>(new APIRequest()
+            {
+                ApiType = SD.ApiType.POST,
+                Data = dto,
+                Url = SchoolUrl + "/api/CategaryMasterAPI/Create",
+                Token = token
+            });
+        }
+
+        public Task<T> DeleteAsync<T>(int id, string token)
+        {
+            return SendAsync<T>(new APIRequest()
+            {
+                ApiType = SD.ApiType.DELETE,
+                Data = id,
+                Url = SchoolUrl + "/api/CategaryMasterAPI/Delete",
+                Token = token
+            });
+        }
+        public Task<T> GetAsync<T>(int id, string token)
+        {
+            return SendAsync<T>(new APIRequest()
+            {
+                ApiType = SD.ApiType.GET,
+                Data = id,
+                Url = SchoolUrl + "/api/CategoryMasterAPI/GetCategary",
+                Token = token
+            });
+        }
+
+        public Task<T> UpdateAsync<T>(CategoriesDTO dto, string token)
+        {
+            return SendAsync<T>(new APIRequest()
+            {
+                ApiType = SD.ApiType.PUT,
+                Data = dto,
+                Url = SchoolUrl + "/api/CategaryMasterAPI/Update",
+                Token = token
+            });
+        }
+
 
     }
 }

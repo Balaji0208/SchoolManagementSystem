@@ -10,12 +10,12 @@ namespace SchoolManagementSystem.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
         [ForeignKey("Register")]
-        public int RegId { get; set; }
-        public Register Register { get; set; }
+        public int registerId { get; set; }
+        public Register? Register { get; set; }
 
         [ForeignKey("RoleDetails")]
         public int RoleId{ get; set; }
-        public RoleDetails RoleDetails { get; set; }
+        public RoleDetails ? RoleDetails { get; set; }
 
         [Required]
         [MaxLength(50)]

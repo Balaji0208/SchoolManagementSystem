@@ -1,0 +1,47 @@
+﻿@model IEnumerable<SchoolManagementSystemWebApp.Models.DTO.ClassMasterDTO>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<div class="container p-4 border mt-4">
+    <div class="row pb-2">
+        <div class="col">
+            <h1 class="text-primary">Class List</h1>
+        </div>
+        <div class="col text-end pt-1">
+            <a asp-controller="Class" asp-action="CreateClass" class="btn btn-outline-primary">
+                <i class="bi bi-plus-square-fill"></i>
+                Create new Class
+            </a>
+
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Class Id             
+                </th>
+                <th>
+                    Class Name               
+                </th>
+                <th>
+
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ClassId</td>
+                    <td>@item.ClassName</td>
+                    <td>
+                        <a asp-controller="Class" asp-action="UpdateClass" asp-route-roleId="@item.ClassId" class="btn btn-success"><i class="bi bi-pencil-square"></i></a>
+                        <a asp-controller="Class" asp-action="RemoveClass" asp-route-roleId="@item.ClassId" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                    </td>
+                </tr>
+            }       
+        </tbody>
+    </table>
+</div>

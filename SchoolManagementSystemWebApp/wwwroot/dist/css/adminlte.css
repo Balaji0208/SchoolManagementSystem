@@ -12956,13 +12956,13 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
 
 .sidebar-dark-secondary .nav-sidebar > .nav-item > .nav-link.active,
 .sidebar-light-secondary .nav-sidebar > .nav-item > .nav-link.active {
-  background-color: #6c757d;
+  background-color: #0a3ba9;
   color: #fff;
 }
 
 .sidebar-dark-secondary .nav-sidebar.nav-legacy > .nav-item > .nav-link.active,
 .sidebar-light-secondary .nav-sidebar.nav-legacy > .nav-item > .nav-link.active {
-  border-color: #6c757d;
+    border-color: #0a3ba9;
 }
 
 .sidebar-dark-success .nav-sidebar > .nav-item > .nav-link.active,
@@ -13220,13 +13220,13 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
 
 .sidebar-dark-gray .nav-sidebar > .nav-item > .nav-link.active,
 .sidebar-light-gray .nav-sidebar > .nav-item > .nav-link.active {
-  background-color: #6c757d;
-  color: #fff;
+    background-color: #0a3ba9;
+    color: #fff;
 }
 
 .sidebar-dark-gray .nav-sidebar.nav-legacy > .nav-item > .nav-link.active,
 .sidebar-light-gray .nav-sidebar.nav-legacy > .nav-item > .nav-link.active {
-  border-color: #6c757d;
+    border-color: #0a3ba9;
 }
 
 .sidebar-dark-gray-dark .nav-sidebar > .nav-item > .nav-link.active,
@@ -13687,9 +13687,9 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
   background-color: #e6e6e6;
 }
 
-[class*="sidebar-light"] .list-group-item .search-path {
-  color: #6c757d;
-}
+    [class*="sidebar-light"] .list-group-item .search-path {
+        color: #0a3ba9;
+    }
 
 .sidebar .form-inline .input-group {
   width: 100%;
@@ -13869,13 +13869,13 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
 
 .dark-mode .sidebar-dark-secondary .nav-sidebar > .nav-item > .nav-link.active,
 .dark-mode .sidebar-light-secondary .nav-sidebar > .nav-item > .nav-link.active {
-  background-color: #6c757d;
-  color: #fff;
+    background-color: #0a3ba9;
+    color: #fff;
 }
 
 .dark-mode .sidebar-dark-secondary .nav-sidebar.nav-legacy > .nav-item > .nav-link.active,
 .dark-mode .sidebar-light-secondary .nav-sidebar.nav-legacy > .nav-item > .nav-link.active {
-  border-color: #6c757d;
+    border-color: #0a3ba9;
 }
 
 .dark-mode .sidebar-dark-success .nav-sidebar > .nav-item > .nav-link.active,
@@ -21304,9 +21304,9 @@ body.text-sm .control-sidebar {
 
 .dark-mode .page-item.disabled a,
 .dark-mode .page-item.disabled .page-link {
-  background-color: #3a4047 !important;
-  border-color: #6c757d !important;
-  color: #6c757d;
+    background-color: #3a4047 !important;
+    border-color: #6c757d !important;
+    color: #0a3ba9;
 }
 
 .dark-mode .page-item .page-link {

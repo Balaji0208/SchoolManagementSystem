@@ -77,6 +77,17 @@ namespace SchoolManagementSystem.Repository
             await _db.SaveChangesAsync();
             return entity;
         }
+        public bool IsUniqueName(string RoleName, int roleId)
+        {
+            var user = _db.RoleDetails.FirstOrDefault(x => x.RoleName == RoleName && x.RoleId!=roleId);
+            if (user == null)
+            {
+                return true;
+            }
+            return false;
+
+
+        }
 
         public async Task SaveAsync()
             {

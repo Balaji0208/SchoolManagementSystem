@@ -1,13 +1,24 @@
-﻿namespace SchoolManagementSystemWebApp.Models.DTO
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace SchoolManagementSystemWebApp.Models.DTO
 {
     public class UserDTO
     {
 
-        public int RegId { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int UserId { get; set; }
+        [ForeignKey("Register")]
+        public int registerId { get; set; }
+        public RegistrationDTO? Register { get; set; }
+
         public string UserName { get; set; }
         public string Password { get; set; }
 
+
+        [ForeignKey("RoleDetails")]
         public int RoleId { get; set; }
-        public RoleDetails RoleDetails { get; set; }
+        public RoleDetailsDTO? RoleDetails { get; set; }
     }
 }

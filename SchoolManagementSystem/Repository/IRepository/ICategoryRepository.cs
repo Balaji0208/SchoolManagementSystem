@@ -11,6 +11,8 @@ namespace SchoolManagementSystem.Repository.IRepository
         Task CreateAsync(Categories entity, int userId);
         Task RemoveAsync(Categories entity, int userId);
         Task<Categories> UpdateAsync(Categories entiy, int userId);
+        bool IsUniqueName (string CategoryName,int CategoryId);
+
         Task SaveAsync();
     }
 }

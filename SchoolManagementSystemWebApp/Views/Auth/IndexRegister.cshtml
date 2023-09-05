@@ -1,17 +1,32 @@
-﻿@model IEnumerable<SchoolManagementSystemWebApp.Models.DTO.RegistrationDTO>
+﻿@model SchoolManagementSystemWebApp.VM.RegisterPaginationVM
 <br />
-<div class="container p-4 border">
+@{
+    ViewData["Title"] = "Registered Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+<body>
+
 
     <div class="row pb-2">
         <div class="col">
             <h1 class="text-primary">Register User</h1>
 
         </div>
-        <div class="col text-end pt-1">
-            <a asp-controller="Auth" asp-action="Register" class="btn btn-outline-primary align-content-end"><i class="bi bi-plus-square-fill"></i>Register User </a>
+        <div class="col d-flex justify-content-end pt-3">
+            <a asp-controller="Auth" asp-action="Register" class="btn btn-primary" style="float:right;"><i class="bi bi-plus-square-fill"></i> Register</a>
+
         </div>
+
     </div>
-    <table class="table">
+    <br />
+
+    <table class="table table-bordered" id="tableDemo">
         <thead>
             <tr>
                 <th>
@@ -41,31 +56,215 @@
                 <th>
                     JoiningDate
                 </th>
-              
+                <th>
+                    Action
+                </th>
+
+
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.Register)
             {
-                <tr>
-                    <td>@item.FirstName</td>
-                    <td>@item.LastName</td>
-                    <td>@item.Email</td>
-                    <td>@item.PhoneNumber</td>
-                    <td>@item.Gender</td>
-                    <td>@item.DOB</td>
-                    <td>@item.Address</td>
-                    <td>@item.Categories.CategoryName</td>
-                    <td>@item.JoiningDate</td>
-        
-                    <td>
-                        <a asp-controller="Register" asp-action="UpdateRegister" asp-route-villaId="@item.RegId" class="btn btn-success"><i class="bi bi-trash2-fill"></a>
-                        <a asp-controller="Villa" asp-action="DeleteVilla" asp-route-villaId="@item.RegId" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+                if (item.StatusFlag = true)
+                {
+                    <tr>
 
- 
+                        <td>@item.FirstName</td>
+                        <td>@item.LastName</td>
+                        <td>@item.Email</td>
+                        <td>@item.PhoneNumber</td>
+                        <td>@item.Gender</td>
+                        <td>@item.DOB</td>
+                        <td>@item.Address</td>
+                        <td>@item.Categories.CategoryName</td>
+                        <td>@item.JoiningDate</td>
+
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-controller="Auth" asp-action="UpdateRegister" asp-route-regId="@item.registerId"> <span id="boot-icon" class="bi bi-pencil-fill" style="font-size: 1.5rem; color: rgb(0, 128, 55);"></span></a>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <a href="#" data-toggle="modal" data-target="#deleteModal_@item.registerId">
+                                    <span id="boot-icon" class="bi bi-trash2-fill" style="font-size: 1.5rem; color: rgb(255, 0, 0);"></span>
+                                </a>
+                            </div>
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-outline-primary view-button" style="margin-left: 6px" data-id="@item.registerId"><span id="boot-icon" class="bi bi-eye-fill" style="font-size: 1.5rem; color: rgb(0, 0, 128);"></span></button>
+                            </div>
+
+
+                            <!-- Delete Confirmation Modal for each item -->
+                            <div class="modal fade" id="deleteModal_@item.registerId" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete this item?                               
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            <a asp-controller="Auth" asp-action="DeleteRegister" asp-route-regId="@item.registerId" class="btn btn-danger">Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="userDetailsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabel">User Details</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <p><strong>First Name:</strong> <span id="FirstName"></span></p>
+                                                    <p><strong>Last Name:</strong> <span id="LastName"></span></p>
+                                                    <p><strong>Email:</strong> <span id="Email"></span></p>
+                                                    <p><strong>Phone No:</strong> <span id="PhoneNo"></span></p>
+                                                    <p><strong>Gender:</strong> <span id="Gender"></span></p>
+                                                    <p><strong>Date Of Birth:</strong> <span id="DateOfBirth"></span></p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <p><strong>Address:</strong> <span id="Address"></span></p>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="enableModal_@item.registerId" tabindex="-1" role="dialog" aria-labelledby="enableModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="enableModalLabel">Confirm Enable</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to Enable this item?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                            <div class="modal fade" id="enableModal_@item.registerId" tabindex="-1" role="dialog" aria-labelledby="enableModalLabel" aria-hidden="true">
+                                                <a asp-controller="Registration" asp-action="EnableRegistration" asp-route-registrationId="@item.registerId" class="btn btn-success">Yes</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </td>
+                    </tr>
+                                }
+                    
+                                
+                              
+
+                                else
+                                {
+                    <tr>
+                                    @*<td>@item.RegistrationId</td>*@
+                        <td>@item.FirstName</td>
+                        <td>@item.LastName</td>
+                        <td>@item.Categories.CategoryName</td>
+                        <td>@item.Gender</td>
+                        <td style="white-space: nowrap;"> @item.DOB.ToString("dd-MM-yyyy")</td>
+                        <td>@item.Email</td>
+                        <td>@item.PhoneNumber</td>
+                      
+                        <td>
+
+
+                            <div class="btn-group" role="group">
+
+                                <a href="#" class="btn btn-primary btn-sm ml-2" data-toggle="modal" data-target="#enableModal_@item.registerId"> Active </a>
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                    
+
+
+
+
+                }
+            </tbody>
+        </table>
+        <script>
+            $(document).ready(function () {
+                $(".view-button").on("click", function () {
+                    var loginUserId = $(this).data("id");
+                    $.ajax({
+                        type: "GET",
+                        url: '@Url.Action("GetUserDetails", "Auth")',
+                        data: { id: $(this).data("id") },
+                        dataType: 'Json', success: function (user) {
+                            $("#FirstName").text(user.firstName);
+                            $("#LastName").text(user.lastName);
+                            $("#Email").text(user.email);
+                            $("#PhoneNo").text(user.phoneNumber);
+                            $("#Gender").text(user.gender);
+                            $("#DateOfBirth").text(user.dOB);
+                            $("#Address").text(user.address);
+
+                            $("#userDetailsModal").modal("show");
+                        },
+                        error: function () {
+                            alert("Failed to fetch user details.");
+                        }
+                    });
+                });
+            });
+        </script>
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                        @if (Model.CurrentPage > 1)
+                        {
+                    <li class="page-item">
+
+                        <a class="page-link" href="/Registration/IndexRegistration?orderBy=@Model.OrderBy&currentPage=@(Model.CurrentPage-1)" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                        }           
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            if (i == Model.CurrentPage)
+                            {
+                        <li class="page-item"><a class="page-link active" href="/Auth/IndexRegister?orderBy=@Model.OrderBy&currentPage=@i"> @i</a></li>
+                            }
+                            else
+                            {
+                        <li class="page-item"><a class="page-link" href="/Auth/IndexRegister?orderBy=@Model.OrderBy&currentPage=@i"> @i</a></li>
+                            }
+                        }
+                        @if (Model.CurrentPage < Model.TotalPages)
+                        {
+                    <li class="page-item">
+                        <a class="page-link" href="/Auth/IndexRegister?orderBy=@Model.OrderBy&currentPage=@Model.CurrentPage+1" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                        }       
+            </ul>
+        </nav>
+
+
+
+
+    </body>
+
+
+

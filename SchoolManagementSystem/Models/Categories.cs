@@ -15,6 +15,6 @@ namespace SchoolManagementSystem.Models
         public int UpdatedBy { get; set; }
         public DateTime UpdatedDate { get; set; }
 
-        public bool StatusFlag { get; set; }
+       public bool StatusFlag { get; set; }
     }
 }

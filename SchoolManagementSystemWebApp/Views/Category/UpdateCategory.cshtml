@@ -1,0 +1,33 @@
+﻿@model SchoolManagementSystemWebApp.Models.DTO.CategoriesDTO
+@{   
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<form asp-action="UpdateCategory">
+   
+        <h1 class="text-primary">Update Category</h1>
+        <hr />
+        <input hidden asp-for="CategoryId" />
+        <div class="row mt-3">
+            <div class="col-md-4 ">
+                <div>
+                    <label for="rolename">Category Name</label>
+                    <input type="text" asp-for="CategoryName" class="form-control" />
+                    <span asp-validation-for="CategoryName" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-2 text-center">
+                <button type="submit" class="btn-lg btn-success" style="margin-left:-337px;margin-top:14px">Save</button>
+            </div>
+            <div class="col-2 justify-content-end">
+                <a asp-action="IndexCategory" asp-controller="Category" class="btn btn-secondary btn-lg" style="margin-left:-431px;margin-top:15px">Cancel</a>
+            </div>
+        </div>
+   
+</form>
+@section Scripts   
+    {   
+    <partial name="_ValidationScriptsPartial" />
+                            }
+

@@ -8,6 +8,7 @@ namespace SchoolManagementSystem.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int registerId { get; set;}
+        public string EmployeeId { get; set; }
 
         [ForeignKey("Categories")]
         public int categoryId { get;set; }
@@ -33,6 +34,13 @@ namespace SchoolManagementSystem.Models
         public string Email { get; set; }
         public DateTime DOB { get; set; }
         public string Address { get; set; }
+
+        [ForeignKey("StateMaster")]
+        public int StateId { get; set; }
+        public StateMaster? StateMaster { get; set; }
+        [ForeignKey("CountryMaster")]
+        public int CountryId { get; set; }
+        public CountryMaster? CountryMaster { get; set; }
         public DateTime joiningDate { get; set; }
         
         public int CreatedBy { get; set; }

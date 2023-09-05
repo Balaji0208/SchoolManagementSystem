@@ -10,6 +10,8 @@ namespace SchoolManagementSystem.Repository.IRepository
         Task CreateAsync(RoleDetails entity,int userId);
         Task RemoveAsync(RoleDetails entity, int userId);
         Task<RoleDetails> UpdateAsync(RoleDetails entiy,int userId);
+        bool IsUniqueName(string RoleName,int roleId);
+
         Task SaveAsync();
     }
 }

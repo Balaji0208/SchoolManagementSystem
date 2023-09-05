@@ -1,0 +1,33 @@
+﻿@model SchoolManagementSystemWebApp.Models.DTO.ClassMasterDTO
+@{   
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<form asp-action="UpdateClassMaster">
+    <br />
+    <div class="container border p-3">
+        <h1 class="text-primary">Update Role</h1>
+        <hr />
+        <input hidden asp-for="ClassId" />
+        <div class="row">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="col-2">
+                <label asp-for="ClassName" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-3">
+                <input asp-for="ClassName" class="form-control" />
+                <span asp-validation-for="ClassName" class="text-danger"></span>
+            </div>
+            <div class="col-5 offset-2">
+                <a asp-action="IndexClass" asp-controller="Class" class="btn-primary btn form-control ">Back to List</a>
+            </div>
+            <div class="col-5">
+                <input type="submit" value="Update" class="btn btn-success form-control" />
+            </div>
+        </div>
+    </div>
+</form>
+@section Scripts   
+    {   
+    <partial name="_ValidationScriptsPartial" />
+                            }
+

@@ -1,0 +1,110 @@
+﻿
+/* Sidebar styling */
+.sidebar {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #007bff; /* Light blue background */
+    color: #000; /* Black text color */
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar li {
+    padding: 10px;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: #000; /* Black text color */
+    display: block;
+    transition: background-color 0.3s;
+}
+
+    .sidebar a:hover {
+        background-color: #555;
+    }
+
+/* Dropdown menu styling */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    min-width: 200px;
+    z-index: 1;
+}
+
+    .dropdown-content a {
+        padding: 10px;
+        text-decoration: none;
+        color: #fff;
+        display: block;
+    }
+
+        .dropdown-content a:hover {
+            background-color: #555;
+        }
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Active bar indication */
+.active {
+    background-color: #007bff; /* Light blue background */
+}
+
+/* Highlight for currently clicked button */
+.highlight {
+    background-color: #007bff; /* Light blue background */
+}
+
+/* Content area styling */
+.content {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+/* Navbar styling */
+.navbar {
+    background-color: #007bff; /* Light blue background */
+    color: #fff; /* White text color */
+    overflow: hidden;
+}
+
+    .navbar ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .navbar li {
+        float: left;
+    }
+
+    .navbar a {
+        display: block;
+        padding: 15px 20px;
+        text-decoration: none;
+        color: inherit;
+    }
+
+        .navbar a:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+/* Logout button */
+.logout {
+    float: right;
+}
+

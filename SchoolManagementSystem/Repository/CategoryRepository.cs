@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace SchoolManagementSystem.Repository
 {
-    public class CategoryRepository : ICategoryRepository 
+    public class CategoryRepository : ICategoryRepository
     {
         private readonly ApplicationDBContext _db;
 
@@ -74,6 +74,17 @@ namespace SchoolManagementSystem.Repository
             _db.Categories.Update(entity);
             await _db.SaveChangesAsync();
             return entity;
+        }
+        public bool IsUniqueName(string CategoryName,int CategoryId)
+        {
+            var user = _db.Categories.FirstOrDefault(x => x.CategoryName == CategoryName&&x.CategoryId!=CategoryId);
+            if (user == null)
+            {
+                return true;
+            }
+            return false;
+
+
         }
 
         public async Task SaveAsync()

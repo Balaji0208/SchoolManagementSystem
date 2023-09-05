@@ -40,6 +40,9 @@ namespace SchoolManagementSystem.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("StatusFlag")
+                        .HasColumnType("bit");
+
                     b.Property<int>("UpdatedBy")
                         .HasColumnType("int");
 
@@ -49,6 +52,106 @@ namespace SchoolManagementSystem.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("SchoolManagementSystem.Models.ClassMaster", b =>
+                {
+                    b.Property<int>("ClassId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClassId"));
+
+                    b.Property<string>("ClassName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("StatusFlag")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ClassId");
+
+                    b.ToTable("ClassMaster");
+                });
+
+            modelBuilder.Entity("SchoolManagementSystem.Models.CountryMaster", b =>
+                {
+                    b.Property<int>("CountryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CountryId"));
+
+                    b.Property<string>("CountryCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CountryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("StatusFlag")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("CountryId");
+
+                    b.ToTable("CountryMaster");
+                });
+
+            modelBuilder.Entity("SchoolManagementSystem.Models.DistrictMaster", b =>
+                {
+                    b.Property<int>("DistrictId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DistrictId"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DistrictName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("StatusFlag")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("DistrictId");
+
+                    b.ToTable("DistrictMaster");
                 });
 
             modelBuilder.Entity("SchoolManagementSystem.Models.Register", b =>
@@ -63,6 +166,9 @@ namespace SchoolManagementSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("CountryId")
+                        .HasColumnType("int");
+
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
@@ -76,6 +182,10 @@ namespace SchoolManagementSystem.Migrations
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -97,6 +207,9 @@ namespace SchoolManagementSystem.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
+                    b.Property<int>("StateId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("StatusFlag")
                         .HasColumnType("bit");
 
@@ -113,6 +226,10 @@ namespace SchoolManagementSystem.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("registerId");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("StateId");
 
                     b.HasIndex("categoryId");
 
@@ -152,6 +269,79 @@ namespace SchoolManagementSystem.Migrations
                     b.ToTable("RoleDetails");
                 });
 
+            modelBuilder.Entity("SchoolManagementSystem.Models.StateMaster", b =>
+                {
+                    b.Property<int>("StateId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StateId"));
+
+                    b.Property<int>("CountryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("StateCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StateName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("StatusFlag")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("StateId");
+
+                    b.HasIndex("CountryId");
+
+                    b.ToTable("StateMaster");
+                });
+
+            modelBuilder.Entity("SchoolManagementSystem.Models.SubjectMaster", b =>
+                {
+                    b.Property<int>("SubjectId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubjectId"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("StatusFlag")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SubjectName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("SubjectId");
+
+                    b.ToTable("SubjectMaster");
+                });
+
             modelBuilder.Entity("SchoolManagementSystem.Models.User", b =>
                 {
                     b.Property<int>("UserId")
@@ -171,9 +361,6 @@ namespace SchoolManagementSystem.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("RegId")
-                        .HasColumnType("int");
-
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
@@ -191,17 +378,32 @@ namespace SchoolManagementSystem.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("registerId")
+                        .HasColumnType("int");
+
                     b.HasKey("UserId");
 
-                    b.HasIndex("RegId");
-
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("registerId");
 
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("SchoolManagementSystem.Models.Register", b =>
                 {
+                    b.HasOne("SchoolManagementSystem.Models.CountryMaster", "CountryMaster")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SchoolManagementSystem.Models.StateMaster", "StateMaster")
+                        .WithMany()
+                        .HasForeignKey("StateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SchoolManagementSystem.Models.Categories", "Categories")
                         .WithMany()
                         .HasForeignKey("categoryId")
@@ -209,19 +411,34 @@ namespace SchoolManagementSystem.Migrations
                         .IsRequired();
 
                     b.Navigation("Categories");
+
+                    b.Navigation("CountryMaster");
+
+                    b.Navigation("StateMaster");
+                });
+
+            modelBuilder.Entity("SchoolManagementSystem.Models.StateMaster", b =>
+                {
+                    b.HasOne("SchoolManagementSystem.Models.CountryMaster", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Country");
                 });
 
             modelBuilder.Entity("SchoolManagementSystem.Models.User", b =>
                 {
-                    b.HasOne("SchoolManagementSystem.Models.Register", "Register")
-                        .WithMany()
-                        .HasForeignKey("RegId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SchoolManagementSystem.Models.RoleDetails", "RoleDetails")
                         .WithMany()
                         .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SchoolManagementSystem.Models.Register", "Register")
+                        .WithMany()
+                        .HasForeignKey("registerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

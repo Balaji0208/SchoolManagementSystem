@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SchoolManagementSystem.Models;
 using SchoolManagementSystem.Models.DTO;
+using SchoolManagementSystem.Repository;
 using SchoolManagementSystem.Repository.IRepository;
 using System.Data;
 using System.Net;
@@ -28,6 +29,7 @@ namespace SchoolManagementSystem.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Register")]
         [Route("api/CategoryMasterAPI/GetAllCategary")]
         [ProducesResponseType(200)]
         public async Task<ActionResult<APIResponse>> GetAllCategary()
@@ -60,11 +62,12 @@ namespace SchoolManagementSystem.Controllers
 
         [HttpGet]
         [Route("api/CategoryMasterAPI/GetCategary")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Register")]
+       
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<APIResponse>> GetCategary(int categoryId)
+        public async Task<ActionResult<APIResponse>> GetCategary([FromBody]int categoryId)
         {
             if (categoryId == 0)
             {
@@ -105,7 +108,7 @@ namespace SchoolManagementSystem.Controllers
         //[Authorize(Roles = "Admin")]
         //[Authorize(Roles = "Register")]
         [Route("api/CategaryMasterAPI/Create")]
-
+        [Authorize(Roles = "Register")]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         [ProducesResponseType(200)]
@@ -139,7 +142,7 @@ namespace SchoolManagementSystem.Controllers
 
                 await _categoryRepository.CreateAsync(category, _loginUserid);
 
-                _response.Result = _mapper.Map<RoleDetailsDTO>(category);
+                _response.Result = _mapper.Map<CategoryDTO>(category);
                 _response.StatusCode = HttpStatusCode.Created;
 
                 return Ok(categoryDTO);
@@ -156,12 +159,13 @@ namespace SchoolManagementSystem.Controllers
 
 
         [HttpDelete]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Register")]
+      
         [Route("api/CategaryMasterAPI/Delete")]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(204)]
-        public async Task<ActionResult<APIResponse>> Delete(int categoryId)
+        public async Task<ActionResult<APIResponse>> Delete([FromBody]int categoryId)
         {
             if (categoryId == null)
             {
@@ -200,7 +204,8 @@ namespace SchoolManagementSystem.Controllers
 
 
         [HttpPut]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Register")]
+       
         [Route("api/CategaryMasterAPI/Update")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
@@ -210,6 +215,14 @@ namespace SchoolManagementSystem.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+            if (!_categoryRepository.IsUniqueName(category.CategoryName, category.CategoryId))
+            {
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                _response.Messages.Add("User Email already exists");
+                return BadRequest(_response);
+
             }
             try
             {

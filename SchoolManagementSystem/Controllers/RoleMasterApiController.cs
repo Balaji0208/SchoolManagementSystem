@@ -7,6 +7,7 @@ using SchoolManagementSystem.Models;
 using System.Data;
 using System.Net;
 using System.Security.Claims;
+using SchoolManagementSystem.Repository;
 
 namespace SchoolManagementSystem.Controllers
 {
@@ -29,6 +30,7 @@ namespace SchoolManagementSystem.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Register")]
         [Route("api/RoleMasterAPI/GetRols")]
         [ProducesResponseType(200)]
         public async Task<ActionResult<APIResponse>> GetRols()
@@ -60,11 +62,12 @@ namespace SchoolManagementSystem.Controllers
 
         [HttpGet]
         [Route("api/RoleMasterAPI/GetRole")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Register")]
+       
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<APIResponse>> GetRole(int RoleId)
+        public async Task<ActionResult<APIResponse>> GetRole([FromBody] int RoleId)
         {
             if (RoleId == 0)
             {
@@ -102,7 +105,7 @@ namespace SchoolManagementSystem.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Admin")]
+       
        [Authorize(Roles = "Register")]
         [Route("api/RoleMasterAPI/Create")]
 
@@ -156,12 +159,13 @@ namespace SchoolManagementSystem.Controllers
 
 
         [HttpDelete]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Register")]
+      
         [Route("api/RoleMasterAPI/RemoverRole")]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(204)]
-        public async Task<ActionResult<APIResponse>> Delete(int RoleId)
+        public async Task<ActionResult<APIResponse>> Delete([FromBody]int RoleId)
         {
             if (RoleId == null)
             {
@@ -200,7 +204,8 @@ namespace SchoolManagementSystem.Controllers
     
 
         [HttpPut]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Register")]
+       
         [Route("api/RoleMasterAPI/UpdateRoleMaster")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
@@ -210,6 +215,14 @@ namespace SchoolManagementSystem.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+            if (!_rolemasterRepository.IsUniqueName(rolemaster.RoleName,rolemaster.RoleId))
+            {
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
+                _response.Messages.Add("User Email already exists");
+                return BadRequest(_response);
+
             }
             try
             {

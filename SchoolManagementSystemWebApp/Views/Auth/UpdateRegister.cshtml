@@ -1,0 +1,171 @@
+﻿@model SchoolManagementSystemWebApp.VM.RegistrationViewModel
+@{
+    ViewData["Title"] = "Update Registration";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+
+<form asp-action="UpdateRegister">
+
+    <h1 class="text-primary">Update Register</h1>
+
+    <input hidden asp-for="Registration.registerId" />
+    <div class="row mt-3">
+        <div class="col-md-4 ">
+            <div>
+                <label for="employeeId">Employee Id</label>
+                <input type="number" asp-for="Registration.EmployeeId" class="form-control" />
+                <span asp-validation-for="Registration.EmployeeId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" asp-for="Registration.FirstName" class="form-control" />
+                <span asp-validation-for="Registration.FirstName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4 ">
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="lastName" asp-for="Registration.LastName" class="form-control" />
+                <span asp-validation-for="Registration.LastName" class="text-danger"></span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-4 ">
+            <div class="form-group">
+                <label for="email">Email Id</label>
+                <input type="email" asp-for="Registration.Email" class="form-control" />
+                <span asp-validation-for="Registration.Email" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-md-4 ">
+            <div class="form-group">
+                <label for="role">Category</label>
+
+                <select asp-for="Registration.categoryId" class="form-control" asp-items="@Model.CategoryList">
+                    <option disabled selected>--Select Role--</option>
+                </select>
+
+                <span asp-validation-for="Registration.categoryId" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-md-4 ">
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <div>
+                    <input type="radio" asp-for="Registration.Gender" value="Male" /> Male
+                    <input type="radio" asp-for="Registration.Gender" value="Female" /> Female
+                </div>
+                <span asp-validation-for="Registration.Gender" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 ">
+            <div class="form-group">
+                <label for="dateOfBirth">Date of Birth</label>
+                <input type="date" asp-for="Registration.DOB" class="form-control" />
+                <span asp-validation-for="Registration.DOB" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-md-4 ">
+            <div class="form-group">
+                <label for="phoneNo">Phone Number</label>
+                <input type="text" asp-for="Registration.PhoneNumber" class="form-control" />
+                <span asp-validation-for="Registration.PhoneNumber" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="address">Address</label>
+                <textarea asp-for="Registration.Address" class="form-control" rows="2"></textarea>
+                <span asp-validation-for="Registration.Address" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 ">
+            <div class="form-group">
+                <label for="countryId">Country</label>
+                <select id="countryId" asp-for="Registration.CountryId" class="form-control" asp-items="@Model.CountryList">
+                    <option disabled selected>--Select Country--</option>
+                </select>
+                <span asp-validation-for="Registration.CountryId" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="stateId">State</label>
+                <select id="stateId" asp-for="Registration.StateId" class="form-control" asp-items="@Model.StateList">
+                    <option disabled selected>--Select State--</option>
+                </select>
+                <span asp-validation-for="Registration.StateId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="JoiningDate">JoiningDate</label>
+                <input type="date" asp-for="Registration.JoiningDate" class="form-control" />
+                <span asp-validation-for="Registration.JoiningDate" class="text-danger"></span>
+            </div>
+        </div>
+
+    </div>
+    <div class="row justify-content-center" style="float:right;margin-right:11px;">
+        <div class="col-2 text-center" style="margin-left:273px">
+            <button type="submit" class="btn-lg btn-success">Save</button>
+        </div>
+        <div class="col-2 justify-content-end">
+            <a asp-action="IndexRegister" asp-controller="Auth" class="btn btn-secondary btn-lg">Cancel</a>
+        </div>
+    </div>
+
+
+
+
+</form>
+
+<script>
+    $(document).ready(function () {
+        $("#countryId").change(function () {
+            var countryId = $(this).val();
+            alert(countryId);
+            $("#stateId").empty(); if (countryId !== "") {
+                $.ajax({
+                    url: '@Url.Action("GetStateByCountryId", "Auth")',
+                    data: { countryId: $(this).val() },
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (states) {
+                        alert(JSON.stringify(states));
+                        $.each(states,
+                            function (i, state) {
+                                $("#stateId").append('<option value="' + state.stateId + '">' + state.stateName + '</option>');
+                            });
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
+

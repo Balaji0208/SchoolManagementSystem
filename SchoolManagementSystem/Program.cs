@@ -9,7 +9,6 @@ using SchoolManagementSystem.Models;
 using SchoolManagementSystem.Repository;
 using SchoolManagementSystem.Repository.IRepository;
 using System.Text;
-
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDBContext>(option =>
 {
@@ -18,10 +17,15 @@ builder.Services.AddDbContext<ApplicationDBContext>(option =>
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDBContext>();
 
 // Add services to the container.
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IRoleMasterRepository, RoleMasterRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-
+builder.Services.AddScoped<ISubjectMasterRepository, SubjectMasterRepository>();
+builder.Services.AddScoped<IClassMasterRepository, ClassMasterRepository>();
+builder.Services.AddScoped<IStateMasterRepository, StateMasterRepository>();
+builder.Services.AddScoped<IDistrictMasterRepository, DistrictMasterRepository>();
+builder.Services.AddScoped<ICountryMasterRepository, CountryMasterRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAutoMapper(typeof(Mapping));

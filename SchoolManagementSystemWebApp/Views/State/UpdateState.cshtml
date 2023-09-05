@@ -1,0 +1,56 @@
+﻿@model SchoolManagementSystemWebApp.VM.StateVM
+@{   
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<form asp-action="UpdateState">
+
+    <h1 class="text-primary">Update State</h1>
+
+    <input hidden asp-for="StateRegistration.StateId" />
+
+    <div class="row mt-3">
+        <div class="col-md-4 ">
+            <div>
+                <label for="stateName">State Name</label>
+                <input type="text" asp-for="StateRegistration.StateName" class="form-control" />
+                <span asp-validation-for="StateRegistration.StateName" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-4 ">
+            <div>
+                <label for="stateCode">State Code</label>
+                <input type="text" asp-for="StateRegistration.StateCode" class="form-control" />
+                <span asp-validation-for="StateRegistration.StateCode" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-4 ">
+            <div class="form-group">
+                <label for="role">Country name</label>
+
+                <select asp-for="StateRegistration.CountryId" class="form-control" asp-items="@Model.StateList">
+                    <option disabled selected>--Select Country--</option>
+                </select>
+
+                <span asp-validation-for="StateRegistration.CountryId" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-2 text-center">
+            <button type="submit" class="btn-lg btn-success" style="margin-left:-337px;margin-top:14px">Save</button>
+        </div>
+        <div class="col-2 justify-content-end">
+            <a asp-action="IndexState" asp-controller="State" class="btn btn-secondary btn-lg" style="margin-left:-431px;margin-top:15px">Cancel</a>
+        </div>
+    </div>
+
+</form>
+@section Scripts   
+    {   
+    <partial name="_ValidationScriptsPartial" />
+                            }
+
