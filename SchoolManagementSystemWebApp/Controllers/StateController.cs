@@ -26,17 +26,30 @@ namespace SchoolManagementSystemWebApp.Controllers
             _countryService = countryService;
         }
 
-        public async Task<IActionResult> IndexState()
+        public async Task<IActionResult> IndexState(int currentPage = 1, string orederBy = "", string term = "")
             {
-                List<StateMasterDTO> list = new();
-                var response = await _stateService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SeesionToken));
-                if (response != null && response.IsSuccess)
-                {
-                    list = JsonConvert.DeserializeObject<List<StateMasterDTO>>(Convert.ToString(response.Result));
-                }
-                return View(list);
+            StatePaginationVM stateVM = new StatePaginationVM();
+
+            IEnumerable<StateMasterDTO> list = null;
+
+            var response = await _stateService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SeesionToken));
+            if (response != null && response.IsSuccess)
+            {
+                list = JsonConvert.DeserializeObject<List<StateMasterDTO>>(Convert.ToString(response.Result));
             }
-        [Authorize(Roles = "Register")]
+
+            int totalRecords = list.Count();
+            int pageSize = 5;
+            int totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+            list = list.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+            stateVM.State = list;
+            stateVM.CurrentPage = currentPage;
+            stateVM.PageSize = pageSize;
+            stateVM.TotalPages = totalPages;
+            stateVM.OrderBy = orederBy;
+            return View(stateVM);
+        }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateState()
         {
             StateVM stateVM = new();
@@ -54,7 +67,7 @@ namespace SchoolManagementSystemWebApp.Controllers
 
             return View(stateVM);
         }
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateState(StateVM model)
@@ -73,7 +86,7 @@ namespace SchoolManagementSystemWebApp.Controllers
             TempData["error"] = "Error encountered.";
             return View(model);
         }
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateState(int stateId)
         {
             StateVM stateVM = new();
@@ -97,7 +110,7 @@ namespace SchoolManagementSystemWebApp.Controllers
             }
             return View(stateVM);
         }
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateState(StateVM model)
@@ -127,6 +140,25 @@ namespace SchoolManagementSystemWebApp.Controllers
             TempData["error"] = "Error encountered.";
             return View(model);
         }
+        public async Task<IActionResult> EnableState(int stateId)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await _stateService.RecoverAsync<APIResponse>(stateId, HttpContext.Session.GetString(SD.SeesionToken));
+
+                if (response != null && response.IsSuccess)
+                {
+                    TempData["success"] = "Enabled successfully";
+                    return RedirectToAction(nameof(IndexState));
+                }
+
+                TempData["error"] = "error";
+                return RedirectToAction(nameof(IndexState));
+            }
+
+            return View();
+        }
+
 
 
     }

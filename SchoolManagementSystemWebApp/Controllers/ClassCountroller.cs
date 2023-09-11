@@ -34,7 +34,7 @@ namespace SchoolManagementSystemWebApp.Controllers
                 }
                 return View(list);
             }
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateClass()
         {
             return View();

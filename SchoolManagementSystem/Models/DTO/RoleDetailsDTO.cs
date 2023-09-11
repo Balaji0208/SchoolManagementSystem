@@ -9,6 +9,7 @@ namespace SchoolManagementSystem.Models.DTO
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RoleId { get; set; }
         public string RoleName { get; set; }
+        public bool StatusFlag { get; set; }
 
         
     }

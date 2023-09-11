@@ -20,7 +20,9 @@
                             <label for="Password">Password</label>
                             <input asp-for="Password" type="password" class="form-control" id="Password" placeholder="Enter password">
                         </div>
-                        <button type="submit" class="btn btn-success btn-block">Login</button>
+                        <button type="submit" class="btn-lg btn-success " style="float: right; margin-right: 3px;">
+                            Login
+                        </button>
                     </form>
                 </div>
                 @* <!-- Remind Password -->
@@ -32,6 +34,9 @@
     </div>
 </div>
 
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+   
+
 }

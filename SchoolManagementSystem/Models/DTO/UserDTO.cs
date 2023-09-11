@@ -20,5 +20,6 @@ namespace SchoolManagementSystem.Models.DTO
         [ForeignKey("RoleDetails")]
         public int RoleId { get; set; }
         public RoleDetails? RoleDetails { get; set; }
+        public bool StatusFlag { get; set; }
     }
 }

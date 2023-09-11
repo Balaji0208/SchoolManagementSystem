@@ -75,7 +75,7 @@ namespace SchoolManagementSystem.Repository
 
             return new RegistrationDTO();
         }
-        public async Task<User> GetAsync(Expression<Func<User, bool>> filter = null, bool tracked = true)
+        public async Task<User> GetAsync(Expression<Func<User, bool>> filter = null, bool tracked = true, string? includeProperties = null)
         {
             IQueryable<User> query = _db.Users;
             if (!tracked)
@@ -86,7 +86,13 @@ namespace SchoolManagementSystem.Repository
             {
                 query = query.Where(filter);
             }
-
+            if (includeProperties != null)
+            {
+                foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
 
 
             return await query.FirstOrDefaultAsync();

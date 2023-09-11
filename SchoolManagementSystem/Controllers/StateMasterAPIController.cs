@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SchoolManagementSystem.Models;
@@ -31,7 +32,7 @@ namespace SchoolManagementSystem.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
         [Route("api/StateMasterAPIController/GetAllCategary")]
         [ProducesResponseType(200)]
         public async Task<ActionResult<APIResponse>> GetAllCategary()
@@ -40,7 +41,7 @@ namespace SchoolManagementSystem.Controllers
 
             try
             {
-                IEnumerable<StateMaster> StateListDTO = await _stateRepository.GetAllAsync(u=> u.StatusFlag == false,includeProperties: "CountryMaster");
+                IEnumerable<StateMaster> StateListDTO = await _stateRepository.GetAllAsync(includeProperties: "CountryMaster");
                 if (StateListDTO == null)
                 {
 
@@ -64,7 +65,7 @@ namespace SchoolManagementSystem.Controllers
 
         [HttpGet]
         [Route("api/StateMasterAPIController/GetCategary")]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
        
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -110,7 +111,7 @@ namespace SchoolManagementSystem.Controllers
         //[Authorize(Roles = "Admin")]
         //[Authorize(Roles = "Register")]
         [Route("api/StateMasterAPIController/Create")]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         [ProducesResponseType(200)]
@@ -184,7 +185,7 @@ namespace SchoolManagementSystem.Controllers
 
 
         [HttpDelete]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
       
         [Route("api/StateMasterAPIController/Delete")]
         [ProducesResponseType(400)]
@@ -229,7 +230,7 @@ namespace SchoolManagementSystem.Controllers
 
 
         [HttpPut]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
        
         [Route("api/StateMasterAPIController/Update")]
         [ProducesResponseType(400)]
@@ -272,5 +273,49 @@ namespace SchoolManagementSystem.Controllers
             return _response;
         }
 
+    
+    [HttpPut]
+    [Authorize(Roles = "Admin")]
+
+    [Route("api/StateMasterAPI/EnableState")]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(204)]
+    public async Task<ActionResult<APIResponse>> EnableSate([FromBody] int stateId)
+    {
+        try
+        {
+            if (stateId == 0)
+            {
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                return BadRequest(_response);
+            }
+
+            var stateDTO = await _stateRepository.GetAsync(u => u.StateId == stateId && u.StatusFlag == true);
+
+            if (stateDTO == null)
+            {
+                _response.StatusCode = HttpStatusCode.NotFound;
+                return NotFound(_response);
+            }
+
+            StateMaster state = _mapper.Map<StateMaster>(stateDTO);
+
+
+
+                state.StatusFlag = false;
+            await _stateRepository.UpdateAsync(state, _loginUserid);
+
+            _response.StatusCode = HttpStatusCode.NoContent;
+            _response.IsSuccess = true;
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _response.IsSuccess = false;
+            _response.Messages = new List<string>() { ex.ToString() };
+        }
+
+        return _response;
     }
+}
 }

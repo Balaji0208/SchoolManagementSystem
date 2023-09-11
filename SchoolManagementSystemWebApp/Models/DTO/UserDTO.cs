@@ -14,11 +14,14 @@ namespace SchoolManagementSystemWebApp.Models.DTO
         public RegistrationDTO? Register { get; set; }
 
         public string UserName { get; set; }
+
+        [DataType(DataType.Password)]
         public string Password { get; set; }
 
 
         [ForeignKey("RoleDetails")]
         public int RoleId { get; set; }
         public RoleDetailsDTO? RoleDetails { get; set; }
+        public bool StatusFlag { get; set; }
     }
 }

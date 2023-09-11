@@ -29,7 +29,7 @@ namespace SchoolManagementSystem.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
         [Route("api/CategoryMasterAPI/GetAllCategary")]
         [ProducesResponseType(200)]
         public async Task<ActionResult<APIResponse>> GetAllCategary()
@@ -38,7 +38,7 @@ namespace SchoolManagementSystem.Controllers
 
             try
             {
-                List<Categories> CategoryListDTO = await _categoryRepository.GetAllAsync(u=> u.StatusFlag == false);
+                List<Categories> CategoryListDTO = await _categoryRepository.GetAllAsync();
                 if (CategoryListDTO == null)
                 {
 
@@ -62,7 +62,7 @@ namespace SchoolManagementSystem.Controllers
 
         [HttpGet]
         [Route("api/CategoryMasterAPI/GetCategary")]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
        
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -108,7 +108,7 @@ namespace SchoolManagementSystem.Controllers
         //[Authorize(Roles = "Admin")]
         //[Authorize(Roles = "Register")]
         [Route("api/CategaryMasterAPI/Create")]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         [ProducesResponseType(200)]
@@ -159,7 +159,7 @@ namespace SchoolManagementSystem.Controllers
 
 
         [HttpDelete]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
       
         [Route("api/CategaryMasterAPI/Delete")]
         [ProducesResponseType(400)]
@@ -204,7 +204,7 @@ namespace SchoolManagementSystem.Controllers
 
 
         [HttpPut]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
        
         [Route("api/CategaryMasterAPI/Update")]
         [ProducesResponseType(400)]
@@ -246,6 +246,50 @@ namespace SchoolManagementSystem.Controllers
             }
             return _response;
         }
+        [HttpPut]
+        [Authorize(Roles = "Admin")]
 
+        [Route("api/CategoryMasterAPI/EnableCategory")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        public async Task<ActionResult<APIResponse>> EnableCategory([FromBody] int categoryId)
+        {
+            try
+            {
+                if (categoryId == 0)
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    return BadRequest(_response);
+                }
+
+                var categoriesDTO = await _categoryRepository.GetAsync(u => u.CategoryId == categoryId && u.StatusFlag == true);
+
+                if (categoriesDTO == null)
+                {
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    return NotFound(_response);
+                }
+
+                Categories categories = _mapper.Map<Categories>(categoriesDTO);
+
+
+
+                categories.StatusFlag = false;
+                await _categoryRepository.UpdateAsync(categories, _loginUserid);
+
+                _response.StatusCode = HttpStatusCode.NoContent;
+                _response.IsSuccess = true;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Messages = new List<string>() { ex.ToString() };
+            }
+
+            return _response;
+        }
     }
+
 }
+

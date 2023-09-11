@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using SchoolManagementSystemWebApp.AuthService;
 using SchoolManagementSystemWebApp.AuthService.IService;
 using SchoolManagementSystemWebApp.Models;
 using SchoolManagementSystemWebApp.Models.DTO;
 using SchoolManagementSystemWebApp.Utility;
+using SchoolManagementSystemWebApp.VM;
 using System.Data;
 
 namespace SchoolManagementSystemWebApp.Controllers
@@ -24,22 +26,35 @@ namespace SchoolManagementSystemWebApp.Controllers
 
         }
 
-        public async Task<IActionResult> IndexCategory()
+        public async Task<IActionResult> IndexCategory(int currentPage = 1, string orederBy = "", string term = "")
         {
-            List<CategoriesDTO> list = new();
+            CategoryPaginationVM categoryPagination = new CategoryPaginationVM();
+
+            IEnumerable<CategoriesDTO> list = null;
+
             var response = await _categoryService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SeesionToken));
             if (response != null && response.IsSuccess)
             {
                 list = JsonConvert.DeserializeObject<List<CategoriesDTO>>(Convert.ToString(response.Result));
             }
-            return View(list);
+
+            int totalRecords = list.Count();
+            int pageSize = 5;
+            int totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+            list = list.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+            categoryPagination.Category = list;
+            categoryPagination.CurrentPage = currentPage;
+            categoryPagination.PageSize = pageSize;
+            categoryPagination.TotalPages = totalPages;
+            categoryPagination.OrderBy = orederBy;
+            return View(categoryPagination);
         }
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCategory()
         {
             return View();
         }
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCategory(CategoriesDTO model)
@@ -57,7 +72,7 @@ namespace SchoolManagementSystemWebApp.Controllers
             TempData["error"] = "Error encountered.";
             return View(model);
         }
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCategory(int categoryId)
         {
             var response = await _categoryService.GetAsync<APIResponse>(categoryId, HttpContext.Session.GetString(SD.SeesionToken));
@@ -69,7 +84,7 @@ namespace SchoolManagementSystemWebApp.Controllers
             }
             return NotFound();
         }
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateCategory(CategoriesDTO model)
@@ -100,6 +115,25 @@ namespace SchoolManagementSystemWebApp.Controllers
             TempData["error"] = "Error encountered.";
             return View();
         }
+        public async Task<IActionResult> EnableCategory(int categoryId)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await _categoryService.RecoverAsync<APIResponse>(categoryId, HttpContext.Session.GetString(SD.SeesionToken));
+
+                if (response != null && response.IsSuccess)
+                {
+                    TempData["success"] = "Enabled successfully";
+                    return RedirectToAction(nameof(IndexCategory));
+                }
+
+                TempData["error"] = "error";
+                return RedirectToAction(nameof(IndexCategory));
+            }
+
+            return View();
+        }
+
 
 
     }

@@ -29,7 +29,7 @@ namespace SchoolManagementSystem.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin,Register")]
         [Route("api/UserApiController/GetAllUserLogin")]
         [ProducesResponseType(200)]
         public async Task<ActionResult<APIResponse>> GetAllUserLogin([FromQuery] string? search)
@@ -38,11 +38,11 @@ namespace SchoolManagementSystem.Controllers
 
             try
             {
-                IEnumerable<User> UserListDTO = await _userRepository.GetAllUserAsync(u=>u.StatusFlag==false,includeProperties: "RoleDetails,Register");
+                IEnumerable<User> UserListDTO = await _userRepository.GetAllUserAsync( includeProperties:"RoleDetails,Register");
 
                 if (!string.IsNullOrEmpty(search))
                 {
-                    UserListDTO = UserListDTO.Where(u => (u.UserName.ToLower().Contains(search)&&u.StatusFlag==false));
+                    UserListDTO = UserListDTO.Where(u => (u.UserName.ToLower().Contains(search) && u.StatusFlag == false));
                 }
                 if (UserListDTO == null)
                 {
@@ -65,7 +65,7 @@ namespace SchoolManagementSystem.Controllers
         }
         [HttpGet]
         [Route("api/UserApiController/GetUserId")]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin,Register")]
 
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -81,7 +81,7 @@ namespace SchoolManagementSystem.Controllers
             }
             try
             {
-                User userdetails = await _userRepository.GetAsync(u => (u.UserId == UserId && u.StatusFlag == false));
+                User userdetails = await _userRepository.GetAsync(u => (u.UserId == UserId && u.StatusFlag == false), includeProperties: "RoleDetails,Register");
 
 
                 if (userdetails == null)
@@ -109,7 +109,7 @@ namespace SchoolManagementSystem.Controllers
 
         [Route("api/UserApiController/UserRegister")]
         [HttpPost]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin,Register")]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
@@ -143,7 +143,7 @@ namespace SchoolManagementSystem.Controllers
             return Ok(_response);
         }
         [HttpDelete]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin,Register")]
 
         [Route("api/UserApiController/RemoveUser")]
         [ProducesResponseType(400)]
@@ -163,7 +163,7 @@ namespace SchoolManagementSystem.Controllers
                 }
 
 
-                var Role = await _userRepository.GetAsync(u => u.UserId == UserId&&u.StatusFlag==false);
+                var Role = await _userRepository.GetAsync(u => u.UserId == UserId && u.StatusFlag == false);
                 if (Role == null)
                 {
                     return NotFound();
@@ -188,7 +188,7 @@ namespace SchoolManagementSystem.Controllers
 
 
         [HttpPut]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin,Register")]
 
         [Route("api/UserApiController/UpdateUser")]
         [ProducesResponseType(400)]
@@ -201,7 +201,7 @@ namespace SchoolManagementSystem.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!_userRepository.IsUniqueUser(user.UserName,user.UserId))
+            if (!_userRepository.IsUniqueUser(user.UserName, user.UserId))
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
@@ -231,9 +231,52 @@ namespace SchoolManagementSystem.Controllers
             }
             return _response;
         }
-       
-    }
 
+
+        [HttpPut]
+        [Authorize(Roles = "Admin,Register")]
+
+        [Route("api/UserApiController/EnableUser")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        public async Task<ActionResult<APIResponse>> EnableUser([FromBody] int userId)
+        {
+            try
+            {
+                if (userId == 0)
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    return BadRequest(_response);
+                }
+
+                var userDTO = await _userRepository.GetAsync(u => u.UserId == userId && u.StatusFlag == true);
+
+                if (userDTO == null)
+                {
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    return NotFound(_response);
+                }
+
+                User user = _mapper.Map<User>(userDTO);
+
+
+
+                user.StatusFlag = false;
+                await _userRepository.UpdateAsync(user, _loginUserid);
+
+                _response.StatusCode = HttpStatusCode.NoContent;
+                _response.IsSuccess = true;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Messages = new List<string>() { ex.ToString() };
+            }
+
+            return _response;
+        }
     }
+}
 
 

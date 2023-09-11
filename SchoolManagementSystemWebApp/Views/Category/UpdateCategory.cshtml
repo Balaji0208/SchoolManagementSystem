@@ -5,6 +5,13 @@
 <form asp-action="UpdateCategory">
    
         <h1 class="text-primary">Update Category</h1>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
+            <li class="breadcrumb-item"><a href="/Category/IndexCategory">Category</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Create Category</li>
+        </ol>
+    </nav>
         <hr />
         <input hidden asp-for="CategoryId" />
         <div class="row mt-3">

@@ -1,0 +1,51 @@
+﻿@model SchoolManagementSystemWebApp.VM.RegisterPaginationVM
+<br />
+<!-- this is for delete popup -->   
+<head>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>   
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4-4.6.0/jq-3.6.0/dt-1.13.1/b-2.3.3/fc-4.2.1/sc-2.0.7/sb-1.4.0/sp-2.1.0/sl-1.5.0/datatables.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+
+    <div class="modal fade" id="userDetailsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-content">
+       
+        
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">User Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>First Name:</strong> @Model.RegisterById.FirstName</p>
+                        <p><strong>Last Name:</strong> @Model.RegisterById.LastName</p>
+                        <p><strong>Email:</strong> @Model.RegisterById.Email</p>
+                        <p><strong>Phone No:</strong> @Model.RegisterById.PhoneNumber</p>
+                        <p><strong>Gender:</strong> @Model.RegisterById.Gender</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>DoB:</strong> @Model.RegisterById.DOB</p>
+                        <p><strong>Joining Date:</strong> @Model.RegisterById.JoiningDate</p>
+                        <p><strong>Address:</strong> @Model.RegisterById.Address</p>
+                        @* <p><strong>Country:</strong> @Model.RegisterById.CountryMaster.CountryName</p>
+                        <p><strong>State:</strong> @Model.RegisterById.StateMaster.StateName</p>*@
+                    </div>
+                </div>
+       
+            <div class="modal-footer">
+                <button data-dismiss="modal" type="button" class="btn btn-default">Close</button>
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+</body>

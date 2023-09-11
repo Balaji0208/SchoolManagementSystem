@@ -6,12 +6,30 @@
 <head>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Increase radio button size */
+        .custom-radio-buttons input[type="radio"] {
+            transform: scale(1.5); /* Increase the scale factor as needed */
+            margin-right: 5px; /* Add some spacing between the radio button and label */
+        }
 
+        /* Style for radio button labels */
+        .radio-label {
+            vertical-align: middle; /* Align the label vertically with the radio button */
+        }
+    </style>
 </head>
 
 <form asp-action="UpdateRegister">
 
     <h1 class="text-primary">Update Register</h1>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
+            <li class="breadcrumb-item"><a href="/Auth/IndexRegister">Register</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Update Register</li>
+        </ol>
+    </nav>
 
     <input hidden asp-for="Registration.registerId" />
     <div class="row mt-3">
@@ -61,12 +79,14 @@
             </div>
         </div>
 
-        <div class="col-md-4 ">
+        <div class="col-md-4">
             <div class="form-group">
                 <label for="gender">Gender</label>
-                <div>
-                    <input type="radio" asp-for="Registration.Gender" value="Male" /> Male
-                    <input type="radio" asp-for="Registration.Gender" value="Female" /> Female
+                <div class="custom-radio-buttons">
+                    <input type="radio" asp-for="Registration.Gender" value="Male" id="maleRadio" />
+                    <label for="maleRadio" class="radio-label">Male</label>
+                    <input type="radio" value="Female" id="femaleRadio" name="Registration.Gender" style="margin-left: 5px;">
+                    <label for="femaleRadio" class="radio-label">Female</label>
                 </div>
                 <span asp-validation-for="Registration.Gender" class="text-danger"></span>
             </div>
@@ -127,15 +147,14 @@
         </div>
 
     </div>
-    <div class="row justify-content-center" style="float:right;margin-right:11px;">
-        <div class="col-2 text-center" style="margin-left:273px">
-            <button type="submit" class="btn-lg btn-success">Save</button>
+    <div class="row justify-content-center" style="float: right; margin-right:18px;">
+        <div class="col-2 text-center" style="margin-left:-70px">
+            <button type="submit" class="btn-lg btn-success" style="margin-right: -7px;">Update</button>
         </div>
         <div class="col-2 justify-content-end">
-            <a asp-action="IndexRegister" asp-controller="Auth" class="btn btn-secondary btn-lg">Cancel</a>
+            <a asp-action="IndexRegister" asp-controller="Auth" class="btn btn-secondary btn-lg" style="margin-left: -117px;margin-top: 3px;">Cancel</a>
         </div>
     </div>
-
 
 
 

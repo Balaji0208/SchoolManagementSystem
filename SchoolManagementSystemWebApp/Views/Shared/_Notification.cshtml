@@ -1,11 +1,11 @@
 ﻿<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-@if (TempData["sucess"] != null)
+@if (TempData["success"] != null)
 {
     <script type="text/javascript">
         Swal.fire({
             position: 'top-end',
             icon: 'success',
-            title: '@TempData["sucess"]',
+            title: '@TempData["success"]',
             showConfirmButton: false,
             timer: 3000,
             timerProgresBar: true
@@ -30,6 +30,3 @@
 
 }
 
-
-
-}

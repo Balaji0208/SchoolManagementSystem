@@ -7,7 +7,7 @@ namespace SchoolManagementSystem.Repository.IRepository
     public interface IAuthRepository
     {
         Task<List<Register>> GetAllRegisterAsync(Expression<Func<Register, bool>> filter = null, bool tracked = true, string? includeProperties = null);
-        Task<Register> GetAsync(Expression<Func<Register, bool>> filter = null, bool tracked = true);
+        Task<Register> GetAsync(Expression<Func<Register, bool>> filter = null, bool tracked = true, string? includeProperties = null);
         bool IsUniqueUser(string username,int userId);
         Task<LoginResponseDTO> Login(LoginRequestDTO LoginRequestDTO);
         Task<UserDTO> Register(RegistrationDTO registration, int userId);

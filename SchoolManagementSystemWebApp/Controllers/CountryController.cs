@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using SchoolManagementSystemWebApp.AuthService;
 using SchoolManagementSystemWebApp.AuthService.IService;
 using SchoolManagementSystemWebApp.Models;
 using SchoolManagementSystemWebApp.Models.DTO;
 using SchoolManagementSystemWebApp.Utility;
+using SchoolManagementSystemWebApp.VM;
 using System.Data;
 
 namespace SchoolManagementSystemWebApp.Controllers
@@ -24,22 +26,35 @@ namespace SchoolManagementSystemWebApp.Controllers
 
         }
 
-        public async Task<IActionResult> IndexCountry()
+        public async Task<IActionResult> IndexCountry(int currentPage = 1, string orederBy = "", string term = "")
         {
-            List<CountryMasterDTO> list = new();
+            CountryPaginationVM countryVM = new CountryPaginationVM();
+
+            IEnumerable<CountryMasterDTO> list = null;
+
             var response = await _countryService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SeesionToken));
             if (response != null && response.IsSuccess)
             {
                 list = JsonConvert.DeserializeObject<List<CountryMasterDTO>>(Convert.ToString(response.Result));
             }
-            return View(list);
+
+            int totalRecords = list.Count();
+            int pageSize = 5;
+            int totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+            list = list.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+            countryVM.Country = list;
+            countryVM.CurrentPage = currentPage;
+            countryVM.PageSize = pageSize;
+            countryVM.TotalPages = totalPages;
+            countryVM.OrderBy = orederBy;
+            return View(countryVM);
         }
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCountry()
         {
             return View();
         }
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCountry(CountryMasterDTO model)
@@ -57,7 +72,7 @@ namespace SchoolManagementSystemWebApp.Controllers
             TempData["error"] = "Error encountered.";
             return View(model);
         }
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCountry(int countryId)
         {
             var response = await _countryService.GetAsync<APIResponse>(countryId, HttpContext.Session.GetString(SD.SeesionToken));
@@ -69,7 +84,7 @@ namespace SchoolManagementSystemWebApp.Controllers
             }
             return NotFound();
         }
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateCountry(CountryMasterDTO model)
@@ -98,6 +113,24 @@ namespace SchoolManagementSystemWebApp.Controllers
                 return RedirectToAction(nameof(IndexCountry));
             }
             TempData["error"] = "Error encountered.";
+            return View();
+        }
+        public async Task<IActionResult> EnableCountry(int countryId)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await _countryService.RecoverAsync<APIResponse>(countryId, HttpContext.Session.GetString(SD.SeesionToken));
+
+                if (response != null && response.IsSuccess)
+                {
+                    TempData["success"] = "Enabled successfully";
+                    return RedirectToAction(nameof(IndexCountry));
+                }
+
+                TempData["error"] = "error";
+                return RedirectToAction(nameof(IndexCountry));
+            }
+
             return View();
         }
 

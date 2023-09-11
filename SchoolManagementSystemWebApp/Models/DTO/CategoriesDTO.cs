@@ -10,5 +10,6 @@
         public DateTime CreatedDate { get; set; }
         public int UpdatedBy { get; set; }
         public DateTime UpdatedDate { get; set; }
+        public bool StatusFlag { get; set; }    
     }
 }

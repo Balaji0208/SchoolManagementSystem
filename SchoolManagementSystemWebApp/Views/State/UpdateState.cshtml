@@ -5,6 +5,13 @@
 <form asp-action="UpdateState">
 
     <h1 class="text-primary">Update State</h1>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
+            <li class="breadcrumb-item"><a href="/State/IndexState">State</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit State</li>
+        </ol>
+    </nav>
 
     <input hidden asp-for="StateRegistration.StateId" />
 

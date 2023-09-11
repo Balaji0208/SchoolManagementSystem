@@ -2,9 +2,10 @@
 
 namespace SchoolManagementSystemWebApp.VM
 {
-    public class UserPaginationVM
+    public class CountryPaginationVM
     {
-        public IEnumerable<UserDTO> User { get; set; }
+        public IEnumerable<CountryMasterDTO> Country { get; set; }
+
         public int PageSize { get; set; }
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }

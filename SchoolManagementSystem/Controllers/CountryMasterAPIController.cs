@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SchoolManagementSystem.Models;
@@ -11,7 +12,7 @@ using System.Security.Claims;
 
 namespace SchoolManagementSystem.Controllers
 {
-    public class CountryMasterAPIController:ControllerBase
+    public class CountryMasterAPIController : ControllerBase
     {
         private readonly ICountryMasterRepository _countrymasterRepository;
         protected APIResponse _response;
@@ -29,7 +30,7 @@ namespace SchoolManagementSystem.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
         [Route("api/CountryMasterAPI/GetAllCountry")]
         [ProducesResponseType(200)]
         public async Task<ActionResult<APIResponse>> GetAllCountry()
@@ -38,7 +39,7 @@ namespace SchoolManagementSystem.Controllers
 
             try
             {
-                List<CountryMaster> CountryMasterDTO = await _countrymasterRepository.GetAllAsync(u=> u.StatusFlag == false);
+                List<CountryMaster> CountryMasterDTO = await _countrymasterRepository.GetAllAsync();
                 if (CountryMasterDTO == null)
                 {
 
@@ -62,12 +63,12 @@ namespace SchoolManagementSystem.Controllers
 
         [HttpGet]
         [Route("api/CategoryMasterAPI/GetCountry")]
-        [Authorize(Roles = "Register")]
-       
+        [Authorize(Roles = "Admin")]
+
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<APIResponse>> GetCountry([FromBody]int countryId)
+        public async Task<ActionResult<APIResponse>> GetCountry([FromBody] int countryId)
         {
             if (countryId == 0)
             {
@@ -78,7 +79,7 @@ namespace SchoolManagementSystem.Controllers
             }
             try
             {
-                CountryMaster countryMaster= await _countrymasterRepository.GetAsync(u => (u.CountryId == countryId&& u.StatusFlag == false));
+                CountryMaster countryMaster = await _countrymasterRepository.GetAsync(u => (u.CountryId == countryId && u.StatusFlag == false));
 
 
                 if (countryMaster == null)
@@ -108,7 +109,7 @@ namespace SchoolManagementSystem.Controllers
         //[Authorize(Roles = "Admin")]
         //[Authorize(Roles = "Register")]
         [Route("api/CountryMasterAPI/Create")]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         [ProducesResponseType(200)]
@@ -161,13 +162,13 @@ namespace SchoolManagementSystem.Controllers
 
 
         [HttpDelete]
-        [Authorize(Roles = "Register")]
-      
+        [Authorize(Roles = "Admin")]
+
         [Route("api/CountryMasterAPI/Delete")]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(204)]
-        public async Task<ActionResult<APIResponse>> Delete([FromBody]int countryId)
+        public async Task<ActionResult<APIResponse>> Delete([FromBody] int countryId)
         {
             if (countryId == null)
             {
@@ -206,8 +207,8 @@ namespace SchoolManagementSystem.Controllers
 
 
         [HttpPut]
-        [Authorize(Roles = "Register")]
-       
+        [Authorize(Roles = "Admin")]
+
         [Route("api/CountryMasterAPI/Update")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
@@ -249,5 +250,49 @@ namespace SchoolManagementSystem.Controllers
             return _response;
         }
 
+
+        [HttpPut]
+        [Authorize(Roles = "Admin")]
+
+        [Route("api/CountryMasterAPI/EnableCountry")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        public async Task<ActionResult<APIResponse>> EnableCountry([FromBody] int countryId)
+        {
+            try
+            {
+                if (countryId == 0)
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    return BadRequest(_response);
+                }
+
+                var countryDTO = await _countrymasterRepository.GetAsync(u => u.CountryId == countryId && u.StatusFlag == true);
+
+                if (countryDTO == null)
+                {
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    return NotFound(_response);
+                }
+
+                CountryMaster country = _mapper.Map<CountryMaster>(countryDTO);
+
+
+
+                country.StatusFlag = false;
+                await _countrymasterRepository.UpdateAsync(country, _loginUserid);
+
+                _response.StatusCode = HttpStatusCode.NoContent;
+                _response.IsSuccess = true;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Messages = new List<string>() { ex.ToString() };
+            }
+
+            return _response;
+        }
     }
 }

@@ -1,12 +1,25 @@
-﻿@model IEnumerable<SchoolManagementSystemWebApp.Models.DTO.CategoriesDTO>
+﻿@model SchoolManagementSystemWebApp.VM.CategoryPaginationVM
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <br />
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+
+
+<body>
+
 <div>
     <div class="row pb-2">
         <div class="col">
             <h1 class="text-primary">Category List</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Category</li>
+                    </ol>
+                </nav>
         </div>
         <div class="col text-end pt-1">
             <a asp-controller="Category" asp-action="CreateCategory" class="btn btn-primary" style="float:right;">
@@ -16,7 +29,7 @@
 
         </div>
     </div>
-    <table class="table table-bordered">
+        <table class="table table-bordered" id="myTable">
         <thead>
             <tr>
 
@@ -29,48 +42,93 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.Category)
             {
                 <tr>
 
                     <td>@item.CategoryName</td>
+                        @if (item.StatusFlag == true)
+                        {
+                            <td>
+
+                                <div class="btn-group" role="group">
+
+                                    <a id="activeItem" class="activeItem" data-target="#Activebasic"
+                                       data-toggle="modal"
+                                       data-path="/Category/EnableCategory?categoryId=@item.CategoryId"><span id="boot-icon">Active</span></a>
+
+                                </div>
+
+                            </td>
+                        }
+                        else{
                     <td>
                         <div class="btn-group" role="group">
                             <a asp-controller="Category" asp-action="UpdateCategory" asp-route-categoryId="@item.CategoryId"> <span id="boot-icon" class="bi bi-pencil-fill" style="font-size: 1.5rem; color: rgb(0, 128, 55);"></span></a>
                         </div>
                         <div class="btn-group" role="group">
-                            <a href="#" data-toggle="modal" data-target="#deleteModal_@item.CategoryId">
+
+                            <a id="deleteItem" class="deleteItem" data-target="#Deletebasic"
+                               data-toggle="modal"
+                               data-path="/Category/DeleteCategory?categoryId=@item.CategoryId">
                                 <span id="boot-icon" class="bi bi-trash2-fill" style="font-size: 1.5rem; color: rgb(255, 0, 0);"></span>
                             </a>
-                        </div>
 
+                        </div>
 
 
 
                         <!-- Delete Confirmation Modal for each item -->
-                        <div class="modal fade" id="deleteModal_@item.CategoryId" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Are you sure you want to delete this item?                               
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                        <a asp-controller="Category" asp-action="DeleteCategory" asp-route-categoryId="@item.CategoryId" class="btn btn-danger">Delete</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                            
                     </td>
+                    }
                 </tr>
             }       
         </tbody>
     </table>
+    
+    
+        <script>
+            $(document).ready(function () {
+                $('#myTable').DataTable({ "paging": false });
+            });
+        </script>
+        <nav aria-label="Page navigation example" style="float: right;margin-top: -25px;">
+            <ul class="pagination">
+                @if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item">
+
+                        <a class="page-link" href="/Category/IndexCategory?orderBy=@Model.OrderBy&currentPage=@(Model.CurrentPage-1)" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                }           
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    if (i == Model.CurrentPage)
+                    {
+                        <li class="page-item"><a class="page-link active" href="/Category/IndexCategory?orderBy=@Model.OrderBy&currentPage=@i"> @i</a></li>
+                    }
+                    else
+                    {
+                        <li class="page-item"><a class="page-link" href="/Category/IndexCategory?orderBy=@Model.OrderBy&currentPage=@i"> @i</a></li>
+                    }
+                }
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="/Category/IndexCategory?orderBy=@Model.OrderBy&currentPage=@Model.CurrentPage+1" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                }       
+            </ul>
+        </nav>
 </div>
+</body>
+@section Scripts {
+   
+    <partial name="_deleteActivePopup" />
+
+}

@@ -11,6 +11,7 @@ namespace SchoolManagementSystemWebApp.AuthService.IService
         Task<T> UpdateAsync<T>(StateMasterDTO dto, string token);
         Task<T> DeleteAsync<T>(int id, string token);
         Task<T>GetStateAsync<T>(int id, string token);
+        Task<T> RecoverAsync<T>(int id, string token);
 
 
     }

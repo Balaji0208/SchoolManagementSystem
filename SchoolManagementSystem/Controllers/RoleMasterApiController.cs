@@ -8,6 +8,7 @@ using System.Data;
 using System.Net;
 using System.Security.Claims;
 using SchoolManagementSystem.Repository;
+using Azure;
 
 namespace SchoolManagementSystem.Controllers
 {
@@ -30,7 +31,7 @@ namespace SchoolManagementSystem.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin")]
         [Route("api/RoleMasterAPI/GetRols")]
         [ProducesResponseType(200)]
         public async Task<ActionResult<APIResponse>> GetRols()
@@ -39,7 +40,7 @@ namespace SchoolManagementSystem.Controllers
 
             try
             {
-                List<RoleDetails> roleListDTO = await _rolemasterRepository.GetAllAsync(u=>u.StatusFlag == false);
+                List<RoleDetails> roleListDTO = await _rolemasterRepository.GetAllAsync();
                 if (roleListDTO == null)
                 {
                     _response.StatusCode = HttpStatusCode.BadRequest;
@@ -62,8 +63,8 @@ namespace SchoolManagementSystem.Controllers
 
         [HttpGet]
         [Route("api/RoleMasterAPI/GetRole")]
-        [Authorize(Roles = "Register")]
-       
+        [Authorize(Roles = "Admin")]
+
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
@@ -105,8 +106,8 @@ namespace SchoolManagementSystem.Controllers
         }
 
         [HttpPost]
-       
-       [Authorize(Roles = "Register")]
+
+        [Authorize(Roles = "Admin")]
         [Route("api/RoleMasterAPI/Create")]
 
         [ProducesResponseType(400)]
@@ -140,7 +141,7 @@ namespace SchoolManagementSystem.Controllers
 
 
 
-                await _rolemasterRepository.CreateAsync(Role,_loginUserid);
+                await _rolemasterRepository.CreateAsync(Role, _loginUserid);
 
                 _response.Result = _mapper.Map<RoleDetailsDTO>(Role);
                 _response.StatusCode = HttpStatusCode.Created;
@@ -150,22 +151,22 @@ namespace SchoolManagementSystem.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.Messages= new List<string>() { ex.ToString() };
+                _response.Messages = new List<string>() { ex.ToString() };
             }
             return _response;
         }
 
-    
+
 
 
         [HttpDelete]
-        [Authorize(Roles = "Register")]
-      
+        [Authorize(Roles = "Admin")]
+
         [Route("api/RoleMasterAPI/RemoverRole")]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(204)]
-        public async Task<ActionResult<APIResponse>> Delete([FromBody]int RoleId)
+        public async Task<ActionResult<APIResponse>> Delete([FromBody] int RoleId)
         {
             if (RoleId == null)
             {
@@ -177,16 +178,16 @@ namespace SchoolManagementSystem.Controllers
                 {
                     return BadRequest();
                 }
-                
+
 
                 var Role = await _rolemasterRepository.GetAsync(u => u.RoleId == RoleId);
                 if (Role == null)
                 {
                     return NotFound();
                 }
-                
+
                 Role.StatusFlag = true;
-                await _rolemasterRepository.UpdateAsync(Role,_loginUserid);
+                await _rolemasterRepository.UpdateAsync(Role, _loginUserid);
                 _response.StatusCode = HttpStatusCode.NoContent;
                 _response.IsSuccess = true;
 
@@ -201,11 +202,11 @@ namespace SchoolManagementSystem.Controllers
             return _response;
         }
 
-    
+
 
         [HttpPut]
-        [Authorize(Roles = "Register")]
-       
+        [Authorize(Roles = "Admin")]
+
         [Route("api/RoleMasterAPI/UpdateRoleMaster")]
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
@@ -216,7 +217,7 @@ namespace SchoolManagementSystem.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (!_rolemasterRepository.IsUniqueName(rolemaster.RoleName,rolemaster.RoleId))
+            if (!_rolemasterRepository.IsUniqueName(rolemaster.RoleName, rolemaster.RoleId))
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
@@ -226,14 +227,14 @@ namespace SchoolManagementSystem.Controllers
             }
             try
             {
-                if (rolemaster == null )
+                if (rolemaster == null)
                 {
                     return BadRequest();
 
                 }
-              
+
                 RoleDetails model = _mapper.Map<RoleDetails>(rolemaster);
-               
+
                 await _rolemasterRepository.UpdateAsync(model, _loginUserid);
                 _response.StatusCode = HttpStatusCode.NoContent;
                 _response.IsSuccess = true;
@@ -247,5 +248,49 @@ namespace SchoolManagementSystem.Controllers
             return _response;
         }
 
+
+        [HttpPut]
+        [Authorize(Roles = "Admin")]
+
+        [Route("api/RoleMasterAPI/EnableRole")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        public async Task<ActionResult<APIResponse>> EnableRole([FromBody] int roleId)
+        {
+            try
+            {
+                if (roleId == 0)
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    return BadRequest(_response);
+                }
+
+                var roleDTO = await _rolemasterRepository.GetAsync(u => u.RoleId == roleId && u.StatusFlag == true);
+
+                if (roleDTO == null)
+                {
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    return NotFound(_response);
+                }
+
+                RoleDetails roleDetail = _mapper.Map<RoleDetails>(roleDTO);
+
+
+
+                roleDetail.StatusFlag = false;
+                await _rolemasterRepository.UpdateAsync(roleDetail, _loginUserid);
+
+                _response.StatusCode = HttpStatusCode.NoContent;
+                _response.IsSuccess = true;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Messages = new List<string>() { ex.ToString() };
+            }
+
+            return _response;
+        }
     }
 }

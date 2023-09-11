@@ -67,9 +67,9 @@ namespace SchoolManagementSystemWebApp.AuthService
             return SendAsync<T>(new APIRequest()
             {
 
-                ApiType = SD.ApiType.DELETE,
+                ApiType = SD.ApiType.PUT,
                 Data = id,
-                Url = SchoolUrl + "/api/AuthApiController/EnableRegistration",
+                Url = SchoolUrl + "/api/AuthApiController/EnableRegistration",//api/AuthApiController/EnableRegistration
                 Token = token
             });
         }

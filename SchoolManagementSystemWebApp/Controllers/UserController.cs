@@ -31,16 +31,28 @@ namespace SchoolManagementSystemWebApp.Controllers
             _roleService = roleService;
         }
 
-        public async Task<IActionResult> IndexUserLogin()
+        public async Task<IActionResult> IndexUserLogin(int currentPage = 1, string orederBy = "", string term = "")
         {
-            List<UserDTO> list = new();
+            UserPaginationVM userVM = new UserPaginationVM();
+
+            IEnumerable<UserDTO> list = null;
 
             var response = await _userLoginService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SeesionToken));
             if (response != null && response.IsSuccess)
             {
                 list = JsonConvert.DeserializeObject<List<UserDTO>>(Convert.ToString(response.Result));
             }
-            return View(list);
+
+            int totalRecords = list.Count();
+            int pageSize = 5;
+            int totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+            list = list.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+            userVM.User = list;
+            userVM.CurrentPage = currentPage;
+            userVM.PageSize = pageSize;
+            userVM.TotalPages = totalPages;
+            userVM.OrderBy = orederBy;
+            return View(userVM);
         }
         public async Task<IActionResult> UserLoginRegister()
         {
@@ -89,7 +101,7 @@ namespace SchoolManagementSystemWebApp.Controllers
             TempData["error"] = "Error encountered.";
             return View(obj);
         }
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin,Register")]
         public async Task<IActionResult> UpdateUser(int userId)
         {
             UserRegistrationViewModel UserVM = new();
@@ -126,7 +138,7 @@ namespace SchoolManagementSystemWebApp.Controllers
             }
             return View(UserVM);
         }
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin,Register")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateUser(UserRegistrationViewModel model)
@@ -158,7 +170,26 @@ namespace SchoolManagementSystemWebApp.Controllers
             TempData["error"] = "Error encountered.";
             return View(userId);
         }
-      
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> EnableUser(int userId)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await _userLoginService.RecoverAsync<APIResponse>(userId, HttpContext.Session.GetString(SD.SeesionToken));
+
+                if (response != null && response.IsSuccess)
+                {
+                    TempData["success"] = "Enabled successfully";
+                    return RedirectToAction(nameof(IndexUserLogin));
+                }
+
+                TempData["error"] = "error";
+                return RedirectToAction(nameof(IndexUserLogin));
+            }
+
+            return View();
+        }
+
     }
 
         

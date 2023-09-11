@@ -28,7 +28,7 @@ namespace SchoolManagementSystem.Controllers
             _response = new();
             _mapper = mapper;
         }
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin,Register")]
         [HttpGet]
         [Route("api/AuthApiController/GetAllRegister")]
         [ProducesResponseType(200)]
@@ -41,7 +41,7 @@ namespace SchoolManagementSystem.Controllers
             {
 
 
-                List<Register> RegisterListDTO = await _authRepository.GetAllRegisterAsync ( u => u.StatusFlag == false,includeProperties: "Categories");
+                List<Register> RegisterListDTO = await _authRepository.GetAllRegisterAsync (includeProperties: "Categories,CountryMaster,StateMaster");
 
                 if (RegisterListDTO == null)
                 {
@@ -64,7 +64,7 @@ namespace SchoolManagementSystem.Controllers
         }
         [HttpGet]
         [Route("api/AuthApiController/GetRegisterId")]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin,Register")]
 
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -80,7 +80,7 @@ namespace SchoolManagementSystem.Controllers
             }
             try
             {
-                Register register = await _authRepository.GetAsync(u => (u.registerId == regId && u.StatusFlag == false));
+                Register register = await _authRepository.GetAsync(u => (u.registerId == regId && u.StatusFlag == false), includeProperties: "Categories,CountryMaster,StateMaster");
 
 
                 if (register == null)
@@ -116,6 +116,14 @@ namespace SchoolManagementSystem.Controllers
             {
                 _response.StatusCode = HttpStatusCode.BadRequest;
                 _response.IsSuccess = false;
+                _response.Messages.Add("Username  or password is null");
+                return BadRequest(_response);
+
+            }
+            if(loginResponse.User.UserName!=model.UserName||loginResponse.User.Password!=model.Password)
+            {
+                _response.StatusCode = HttpStatusCode.BadRequest;
+                _response.IsSuccess = false;
                 _response.Messages.Add("Username  or password is incorrect");
                 return BadRequest(_response);
 
@@ -126,7 +134,7 @@ namespace SchoolManagementSystem.Controllers
             return Ok(_response);
 
         }
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin,Register")]
         [Route("api/AuthApiController/Register")]
         [HttpPost]
         [ProducesResponseType(400)]
@@ -163,7 +171,7 @@ namespace SchoolManagementSystem.Controllers
             return Ok(_response);
         }
         [HttpDelete]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin,Register")]
 
         [Route("api/AuthApiController/Remove")]
         [ProducesResponseType(400)]
@@ -208,7 +216,7 @@ namespace SchoolManagementSystem.Controllers
 
 
         [HttpPut]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin,Register")]
 
         [Route("api/AuthApiController/Update")]
         [ProducesResponseType(400)]
@@ -253,33 +261,15 @@ namespace SchoolManagementSystem.Controllers
             _response.Result = (matchingUser);
             return Ok(_response);
         }
-        [HttpGet]
-        [Route("api/AuthApiController/GetAllDeletedRegistration")]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<APIResponse>> GetAllDeletedRegistration()
-        {
-            try
-            {
-                IEnumerable<Register> registrationList = await _authRepository.GetAllRegisterAsync(u => (u.StatusFlag), includeProperties: "CategoryMaster,StateMaster,CountryMaster");
-                _response.Result = _mapper.Map<List<RegistrationDTO>>(registrationList);
-                _response.StatusCode = HttpStatusCode.OK;
-                return Ok(_response);
-            }
-            catch (Exception ex)
-            {
-                _response.IsSuccess = false;
-                _response.Messages = new List<string>() { ex.ToString() };
-            }
 
-            return _response;
-        }
+
         [HttpPut]
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin,Register")]
+
         [Route("api/AuthApiController/EnableRegistration")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<APIResponse>> EnableRegistration(int registrationId)
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        public async Task<ActionResult<APIResponse>> EnableRegistration([FromBody]int registrationId)
         {
             try
             {

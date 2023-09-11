@@ -8,61 +8,65 @@
 </head>
 
 <form method="post">
-    <div class="container border p-4">
-        <div class="row text-center">
-            <h1>UserLogin</h1>
-        </div>
-        <div class="row text-center">
-            <div asp-validation-summary="All" class="text-danger"></div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-md-4">
-                <label for="UserRegistration.registerId">Registered User</label>
-                <input type="text" id="Name" class="form-control" />
-                <input type="hidden" id="registerId" asp-for="UserRegistration.registerId" />
-            </div>
-            <div class="col-md-4">
-                <label for="userName">User Name</label>
-                <input type="text" asp-for="UserRegistration.UserName" class="form-control" />
-                <span asp-validation-for="UserRegistration.UserName" class="text-danger"></span>
-            </div>
 
-            <div class="col-md-4">
-                <label for="Password">Password</label>
-                <input type="text" asp-for="UserRegistration.Password" class="form-control" />
-                <span asp-validation-for="UserRegistration.Password" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-md-4 ">
-                <label asp-for="UserRegistration.RoleId" class="control-label pt-2" style="font-size:20px;">Registration Name</label>
-                <div class="col-md-9 pb-4">
-                    <select asp-for="UserRegistration.RoleId" class="form-control" asp-items="@Model.RoleList">
-                        <option disabled selected>--Select Role--</option>
-                    </select>
-                    <span asp-validation-for="UserRegistration.RoleId" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-4 ">
-                <label asp-for="UserRegistration.registerId" class="control-label pt-2" style="font-size:20px;">Registration Name</label>
-                <div class="col-md-9 pb-4">
-                    <select asp-for="UserRegistration.registerId" class="form-control" asp-items="@Model.RegisterList">
-                        <option disabled selected>--Select Registration--</option>
-                    </select>
-                    <span asp-validation-for="UserRegistration.registerId" class="text-danger"></span>
-                </div>
-            </div>
-        </div>
-
-        <div class="row justify-content-left">
-            <div class="col-2 text-center">
-                <button type="submit" class="btn btn-primary btn-block">Save</button>
-            </div>
-            <div class="col-2 text-center">
-                <a asp-action="IndexUserLogin" asp-controller="User" class="btn btn-primary btn-block">Cancel</a>
-            </div>
+    <div class="row text-center">
+        <h1>UserLogin</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
+                <li class="breadcrumb-item"><a href="/User/IndexUserLogin">User</a></li>
+                <li class="breadcrumb-item active" aria-current="page">User Login Update</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row text-center">
+        <div asp-validation-summary="All" class="text-danger"></div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <label for="UserRegistration.registerId">Registered User</label>
+            <input type="text" id="Name" class="form-control" />
+            <input type="hidden" id="registerId" asp-for="UserRegistration.registerId" />
         </div>
     </div>
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <label for="userName">User Name</label>
+            <input type="text" asp-for="UserRegistration.UserName" class="form-control" />
+            <span asp-validation-for="UserRegistration.UserName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <label for="Password">Password</label>
+            <input type="password" asp-for="UserRegistration.Password" class="form-control" />
+            <span asp-validation-for="UserRegistration.Password" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-4 ">
+            <div class="form-group">
+                <label for="roleId">Role</label>
+                <select id="countryId" asp-for="UserRegistration.RoleId" class="form-control" asp-items="@Model.RoleList">
+                    <option disabled selected>--Select Role--</option>
+                </select>
+                <span asp-validation-for="UserRegistration.RoleId" class="text-danger"></span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-2 text-center">
+            <button type="submit" class="btn-lg btn-success" style="margin-left:-337px;margin-top:14px">Save</button>
+        </div>
+        <div class="col-2 justify-content-end">
+            <a asp-action="IndexUserLogin" asp-controller="User" class="btn btn-secondary btn-lg" style="margin-left:-431px;margin-top:15px">Cancel</a>
+        </div>
+    </div>
+
+
 
 
 

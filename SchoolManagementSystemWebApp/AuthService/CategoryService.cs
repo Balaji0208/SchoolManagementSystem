@@ -71,6 +71,17 @@ namespace SchoolManagementSystemWebApp.AuthService
                 Token = token
             });
         }
+        public Task<T> RecoverAsync<T>(int id, string token)
+        {
+            return SendAsync<T>(new APIRequest()
+            {
+
+                ApiType = SD.ApiType.PUT,
+                Data = id,
+                Url = SchoolUrl + "/api/CategoryMasterAPI/EnableCategory",//api/AuthApiController/EnableRegistration
+                Token = token
+            });
+        }
 
 
     }

@@ -55,7 +55,7 @@ namespace SchoolManagementSystem.Repository
 
             return await query.ToListAsync();
         }
-        public async Task<Register> GetAsync(Expression<Func<Register, bool>> filter = null, bool tracked = true)
+        public async Task<Register> GetAsync(Expression<Func<Register, bool>> filter = null, bool tracked = true, string? includeProperties = null)
         {
             IQueryable<Register> query = _db.Register;
             if (!tracked)
@@ -65,6 +65,13 @@ namespace SchoolManagementSystem.Repository
             if (filter != null)
             {
                 query = query.Where(filter);
+            }
+            if (includeProperties != null)
+            {
+                foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
             }
 
 
@@ -90,7 +97,7 @@ namespace SchoolManagementSystem.Repository
             {
                 var user = _db.Users.FirstOrDefault(u => u.UserName.ToLower() == LoginRequestDTO.UserName.ToLower());
 
-                var Role = _db.RoleDetails.Where(u => u.RoleId == u.RoleId).Select(u => u.RoleName).FirstOrDefault();
+                var Role = _db.RoleDetails.Where(u => u.RoleId == user.RoleId).Select(u => u.RoleName).FirstOrDefault();
                 //var userid = _db.Users.Where(u => u.UserName == user.UserName).Select(u => u.UserId).FirstOrDefault();
                 var userRegistrationFromDb = _db.Register.FirstOrDefault(u => u.registerId == user.registerId);
 

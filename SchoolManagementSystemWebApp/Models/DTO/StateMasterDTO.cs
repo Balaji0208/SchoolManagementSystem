@@ -13,6 +13,7 @@ namespace SchoolManagementSystemWebApp.Models.DTO
         [ForeignKey("CountryMaster")]
         public int CountryId { get; set; }
         public CountryMasterDTO? CountryMaster { get; set; }
+        public bool StatusFlag { get; set; }
     }
 
     }

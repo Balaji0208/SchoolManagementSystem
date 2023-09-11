@@ -12,6 +12,7 @@ using SchoolManagementSystemWebApp.Models;
 using SchoolManagementSystemWebApp.Models.DTO;
 using SchoolManagementSystemWebApp.Utility;
 using SchoolManagementSystemWebApp.VM;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Security.Claims;
@@ -35,22 +36,25 @@ namespace SchoolManagementSystemWebApp.Controllers
            
 
         }
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles ="Admin,Register")]
         public async Task<IActionResult> IndexRegister(int currentPage = 1,string orederBy="",string term="")
         {
             RegisterPaginationVM registerVM = new RegisterPaginationVM(); 
-            List<RegistrationDTO> list = new();
+          
+            IEnumerable<RegistrationDTO> list = null  ;
 
             var response = await _authService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SeesionToken));
             if (response != null && response.IsSuccess)
             {
                 list = JsonConvert.DeserializeObject<List<RegistrationDTO>>(Convert.ToString(response.Result));
             }
+          
             int totalRecords = list.Count();
             int pageSize = 5;
             int totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
             list = list.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
             registerVM.Register = list;
+            
             registerVM.CurrentPage = currentPage;
             registerVM.PageSize = pageSize;
             registerVM.TotalPages = totalPages;
@@ -83,17 +87,17 @@ namespace SchoolManagementSystemWebApp.Controllers
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-
+                
                 HttpContext.Session.SetString(SD.SeesionToken, model.Token);
                 return RedirectToAction("Index", "Home");
             }
             else
             {
-                ModelState.AddModelError("CustomError", response.ErrorMessages.FirstOrDefault());
-                return View(obj);
+                TempData["error"] = "Error encountered";
+                return View();
             }
         }
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin,Register")]
         [HttpGet]
         public async Task<IActionResult> Register()
         {
@@ -125,14 +129,22 @@ namespace SchoolManagementSystemWebApp.Controllers
             return View(RegistrationMasterVM);
         }
 
-        public async Task<JsonResult> GetUserDetails(int id) 
-        { 
+        public async Task<IActionResult> GetUserDetails(int id) 
+        {
+            RegisterPaginationVM registerVM = new RegisterPaginationVM();
+            RegistrationDTO user;
             var response = await _authService.GetAsync<APIResponse>(id, HttpContext.Session.GetString(SD.SeesionToken)); 
             if (response != null) 
-            { RegistrationDTO user = JsonConvert.DeserializeObject<RegistrationDTO>(Convert.ToString(response.Result)); 
-                return Json(user);
-            } 
-            return Json(null);
+            { 
+                user = JsonConvert.DeserializeObject<RegistrationDTO>(Convert.ToString(response.Result));
+                registerVM.RegisterById = user;
+                return PartialView("_View", registerVM);
+             
+
+            }
+            return PartialView("_View", null);
+
+
         }
 
 
@@ -157,7 +169,7 @@ namespace SchoolManagementSystemWebApp.Controllers
             return Json(null);
 
         }
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin,Register")]
         public async Task<IActionResult> EnableRegistration(int registrationId)
         {
             if (ModelState.IsValid)
@@ -178,7 +190,7 @@ namespace SchoolManagementSystemWebApp.Controllers
         }
 
 
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin,Register")]
         [HttpPost]
         [ValidateAntiForgeryToken]
       
@@ -200,7 +212,7 @@ namespace SchoolManagementSystemWebApp.Controllers
         }
 
 
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin,Register")]
         [HttpGet]
         public async Task<IActionResult> UpdateRegister(int regId)
         {
@@ -255,7 +267,7 @@ namespace SchoolManagementSystemWebApp.Controllers
         }
             
         
-        [Authorize(Roles = "Register")]
+        [Authorize(Roles = "Admin,Register")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateRegister(RegistrationViewModel model)

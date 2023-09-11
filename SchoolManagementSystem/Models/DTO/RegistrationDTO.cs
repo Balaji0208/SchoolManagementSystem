@@ -21,13 +21,14 @@ namespace SchoolManagementSystem.Models.DTO
 
         [ForeignKey("StateMaster")]
         public int StateId { get; set; }
-        public StateMaster? CountryMaster { get; set; }
+        public StateMaster? StateMaster { get; set; }
         [ForeignKey("CountryMaster")]
         public int CountryId { get; set; }
-        public CountryMaster? Country { get; set; }
+        public CountryMaster? CountryMaster { get; set; }
 
 
         public DateTime joiningDate { get; set; }
+        public bool StatusFlag { get; set; }    
 
     }
 }

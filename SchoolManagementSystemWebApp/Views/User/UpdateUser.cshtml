@@ -12,8 +12,29 @@
 <form asp-action="UpdateUser">
 
     <h1 class="text-primary">Update Register</h1>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
+            <li class="breadcrumb-item"><a href="/User/IndexUserLogin">User</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit User Login </li>
+        </ol>
+    </nav>
 
     <input hidden asp-for="UserRegistration.UserId" />
+    <input hidden asp-for="UserRegistration.registerId" />
+  
+    <div class="row mt-3">
+        <div class="col-md-4 ">
+            <div class="form-group">
+                <label asp-for="UserRegistration.registerId">Name</label>
+                <select asp-for="UserRegistration.registerId" disabled class="form-control" asp-items="@Model.RegisterList">
+                    <option disabled selected>--Select Role--</option>
+                </select>
+                <span asp-validation-for="UserRegistration.RoleId" class="text-danger"></span>
+            </div>
+
+        </div>
+    </div>
 
     <div class="row mt-3">
         <div class="col-md-4">
@@ -24,11 +45,10 @@
     </div>
     <div class="row mt-3">
         <div class="col-md-4">
-            <label for="Password">Password</label>
-            <input type="text" asp-for="UserRegistration.Password" class="form-control" />
+            <label asp-for="UserRegistration.Password">Password</label>
+            <input asp-for="UserRegistration.Password" id="passwordInput" class="form-control" />
             <span asp-validation-for="UserRegistration.Password" class="text-danger"></span>
         </div>
-
     </div>
     <div class="row mt-3">
         <div class="col-md-4 ">
@@ -42,30 +62,31 @@
 
         </div>
     </div>
-    <div class="row mt-3">
-        <div class="col-md-4 ">
-            <div class="form-group">
-                <label for="role">Name</label>
-                <select asp-for="UserRegistration.registerId" class="form-control" asp-items="@Model.RegisterList">
-                    <option disabled selected>--Select Registration--</option>
-                </select>
-                <span asp-validation-for="UserRegistration.registerId" class="text-danger"></span>
-            </div>
-        </div>
-    </div>
+
 
     <div class="row justify-content-center">
-        <div class="col-2 text-center">
-            <button type="submit" class="btn-lg btn-success" style="margin-left:-337px;margin-top:14px">Save</button>
-        </div>
-        <div class="col-2 justify-content-end">
-            <a asp-action="IndexUserLogin" asp-controller="User" class="btn btn-secondary btn-lg" style="margin-left:-431px;margin-top:15px">Cancel</a>
-        </div>
+    <div class="col-2 text-center">
+        <button type="submit" class="btn-lg btn-success" style="margin-left:-337px;margin-top:14px">Update</button>
+    </div>
+    <div class="col-2 justify-content-end">
+        <a asp-action="IndexUserLogin" asp-controller="User" class="btn btn-secondary btn-lg" style="margin-left:-444px;margin-top:15px">Cancel</a>
+    </div>
     </div>
 
+
+
 </form>
+
+
 @section Scripts   
     {   
     <partial name="_ValidationScriptsPartial" />
-                            }
+    <script>    // Retrieve the actual password from the model or database and store it in a JavaScript variable       
+        var actualPassword = '@Model.UserRegistration.Password';        // Set the value attribute of the password input field to the actual password       
+        document.getElementById('passwordInput').value = actualPassword;
+    </script>
+
+   
+
+                }
 
