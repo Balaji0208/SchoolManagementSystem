@@ -25,15 +25,9 @@
 <form asp-action="Register">
 
     <h2 class="text-center">Register User</h2>
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
-            <li class="breadcrumb-item"><a href="/Auth/IndexRegister">Register</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Create Register</li>
-        </ol>
-    </nav>
+    
     <div class="row mt-3">
-        <div class="col-md-4 ">
+        <div class="col-md-4">
             <div>
                 <label for="employeeId">Employee Id</label>
                 <input type="number" asp-for="Registration.EmployeeId" class="form-control" />

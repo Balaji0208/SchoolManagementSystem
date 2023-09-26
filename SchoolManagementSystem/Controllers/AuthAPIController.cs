@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using AutoMapper;
 using SchoolManagementSystem.Repository;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace SchoolManagementSystem.Controllers
 {

@@ -25,12 +25,12 @@ namespace SchoolManagementSystemWebApp.Controllers
             _categoryService = categoryService;
 
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> IndexCategory(int currentPage = 1, string orederBy = "", string term = "")
         {
             CategoryPaginationVM categoryPagination = new CategoryPaginationVM();
 
-            IEnumerable<CategoriesDTO> list = null;
+            IEnumerable<CategoriesDTO> list = new List<CategoriesDTO>();
 
             var response = await _categoryService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SeesionToken));
             if (response != null && response.IsSuccess)

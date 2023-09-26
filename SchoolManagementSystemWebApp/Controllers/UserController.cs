@@ -35,7 +35,7 @@ namespace SchoolManagementSystemWebApp.Controllers
         {
             UserPaginationVM userVM = new UserPaginationVM();
 
-            IEnumerable<UserDTO> list = null;
+            IEnumerable<UserDTO> list = new List<UserDTO>();
 
             var response = await _userLoginService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SeesionToken));
             if (response != null && response.IsSuccess)

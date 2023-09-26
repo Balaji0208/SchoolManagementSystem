@@ -1,0 +1,50 @@
+﻿@model IEnumerable<SchoolManagementSystemWebApp.Models.DTO.ModuleRoleMappingDTO>
+@{
+    string currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    string currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+
+ @foreach (var Menuitem in Model)
+{
+    @if (@Menuitem.Module.ParentId == 0)
+    {
+        
+            <ul class="nav nav-treeview">
+
+                <li class="nav-item">
+                <a href="@Menuitem.Module.Url">@Menuitem.Module.Menus</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(currentController == "User" && (currentAction == "IndexUserLogin"||currentAction=="UserLoginRegister"||currentAction=="UpdateUser") ? "active" : "")" asp-controller="User" asp-action="IndexUserLogin">Login Registration</a>
+                </li>
+
+
+            </ul>
+      
+
+            <ul class="nav nav-treeview">
+
+                <li class="nav-item">
+                    <a class="nav-link " asp-controller="Role" asp-action="IndexRole">Role Master</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link " asp-controller="Category" asp-action="IndexCategory">Category Master</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link " asp-controller="Country" asp-action="IndexCountry">Country Master</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link " asp-controller="State" asp-action="IndexState">State Master</a>
+                </li>
+
+            </ul>
+
+    }
+
+
+}
+

@@ -26,6 +26,8 @@ builder.Services.AddScoped<IStateMasterRepository, StateMasterRepository>();
 builder.Services.AddScoped<IDistrictMasterRepository, DistrictMasterRepository>();
 builder.Services.AddScoped<ICountryMasterRepository, CountryMasterRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IModuleRepository, ModuleRepository>();
+builder.Services.AddScoped<IModuleRoleMappingRepository, ModuleRoleMappingRepository>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAutoMapper(typeof(Mapping));

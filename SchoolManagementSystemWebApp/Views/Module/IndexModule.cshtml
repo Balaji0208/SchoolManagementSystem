@@ -1,0 +1,135 @@
+﻿@model SchoolManagementSystemWebApp.VM.ModulePaginationVM
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+<body>
+
+    <div class="row pb-2">
+        <div class="col">
+            <h1 class="text-primary">Module List</h1>
+
+        </div>
+
+        <div class="col text-end pt-1">
+            <a asp-controller="Module" asp-action="CreateModule" class="btn btn-primary" style="float:right;">
+                <i class="bi bi-plus-square-fill"></i>
+                Create
+            </a>
+
+        </div>
+    </div>
+    <table class="table table-bordered" id="myTable">
+        <thead>
+            <tr>
+
+                <th>
+                    Menu Name               
+                </th>
+                
+                <th>
+                    Parent Name
+                </th>
+                <th>
+                    URL
+                </th>
+                <th>
+                    Action
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model.Module)
+            {
+                <tr>
+
+                    <td>@item.Menus</td>
+                    <td>@item.ParentId</td>
+                    <td>@item.Url</td>
+                    @if (item.StatusFlag == true)
+                    {
+                        <td>
+
+                            <div class="btn-group" role="group">
+
+                                <a id="activeItem" class="activeItem" data-target="#Activebasic"
+                                   data-toggle="modal"
+                                   data-path="/Module/EnableModule?moduleId=@item.ModuleId"><span id="boot-icon">Active</span></a>
+
+                            </div>
+
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+
+                            <div class="btn-group" role="group">
+                                <a asp-controller="Module" asp-action="UpdateModule" asp-route-moduleId="@item.ModuleId"> <span id="boot-icon" class="bi bi-pencil-fill" style="font-size: 1.5rem; color: rgb(0, 128, 55);"></span></a>
+                            </div>
+                            <div class="btn-group" role="group">
+
+                                <a id="deleteItem" class="deleteItem" data-target="#Deletebasic"
+                                   data-toggle="modal"
+                                   data-path="/Module/DeleteModule?moduleId=@item.ModuleId">
+                                    <span id="boot-icon" class="bi bi-trash2-fill" style="font-size: 1.5rem; color: rgb(255, 0, 0);"></span>
+                                </a>
+
+                            </div>
+
+
+
+                        </td>
+                    }
+                </tr>                    <!-- Delete Confirmation Modal for each item -->
+            }       
+        </tbody>
+    </table>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({ "paging": false });
+        });
+    </script>
+    <nav aria-label="Page navigation example" style="float: right;margin-top: -25px;">
+        <ul class="pagination">
+            @if (Model.CurrentPage > 1)
+            {
+                <li class="page-item">
+
+                    <a class="page-link" href="/Module/IndexModule?orderBy=@Model.OrderBy&currentPage=@(Model.CurrentPage-1)" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            }           
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                if (i == Model.CurrentPage)
+                {
+                    <li class="page-item"><a class="page-link active" href="/Module/IndexModule?orderBy=@Model.OrderBy&currentPage=@i"> @i</a></li>
+                }
+                else
+                {
+                    <li class="page-item"><a class="page-link" href="/Module/IndexModule?orderBy=@Model.OrderBy&currentPage=@i"> @i</a></li>
+                }
+            }
+            @if (Model.CurrentPage < Model.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="/Module/IndexModule?orderBy=@Model.OrderBy&currentPage=@Model.CurrentPage+1" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            }       
+        </ul>
+    </nav>
+
+</body>
+@section Scripts {
+
+    <partial name="_deleteActivePopup" />
+
+}

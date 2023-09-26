@@ -25,12 +25,13 @@ namespace SchoolManagementSystemWebApp.Controllers
                 _roleService = roleService;
                
             }
+        [Authorize(Roles = "Admin")]
 
-            public async Task<IActionResult> IndexRole(int currentPage = 1, string orederBy = "", string term = "")
+        public async Task<IActionResult> IndexRole(int currentPage = 1, string orederBy = "", string term = "")
             {
             RoleVM roleVM = new RoleVM();
 
-            IEnumerable<RoleDetailsDTO> list = null;
+            IEnumerable<RoleDetailsDTO> list = new List<RoleDetailsDTO>();
 
             var response = await _roleService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SeesionToken));
             if (response != null && response.IsSuccess)

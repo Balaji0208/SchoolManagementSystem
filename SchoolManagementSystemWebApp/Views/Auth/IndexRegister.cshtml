@@ -19,32 +19,28 @@
 
 
     <div class="row pb-2">
-        <div class="col">
-            <h1 class="text-primary">Register User</h1>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/Home/Index">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Register</li>
-                </ol>
-            </nav>
+        <div class="col-md-4">
+            <h1 class="text-primary">Users</h1>
+           
 
         </div>
-    </div>
-    <div class="row pb-2">
-        <div class="col">
+    
+ 
+        <div class="col-md-4">
             <div class="col d-flex justify-content-end pt-3">
-                <a asp-controller="Auth" asp-action="Register" class="btn btn-primary" style="float:right;"><i class="bi bi-plus-square-fill"></i> Register</a>
+                <a asp-controller="Auth" asp-action="Register" class="btn btn-primary" style="float:right;margin-right: -490px;"><i class="bi bi-plus-square-fill"></i> Register</a>
 
             </div>
         </div>
-    </div>
+        </div>
+   
 
 
     <br />
 
     <table class="table table-bordered" id="myTable">
         <thead>
-            <tr>
+            <tr style="background-color:lightgrey;">
                 <th>
                     FirstName
                 </th>
@@ -125,10 +121,8 @@
 
                             </div>
                             <div class="btn-group" role="group">
-                                <a asp-controller="Auth" asp-action="GetUserDetails" asp-route-id="@item.registerId" asp-route-currentPageNo="@Model.CurrentPage"><span id="boot-icon" class="bi bi-eye-fill" style="font-size: 1.5rem; color: rgb(0, 0, 128);"></span></a>
+                                <button class="btn btn-outline-primary view-button" style="margin-left: 6px" data-id="@item.registerId"><span id="boot-icon" class="bi bi-eye-fill" style="font-size: 1.5rem; color: rgb(0, 0, 128);"></span></button>
                             </div>
-
-
                         </td>
                     }
                 </tr>
@@ -145,19 +139,53 @@
 
         </tbody>
     </table>
+    <div class="modal fade show" id="registrationModal" tabindex="-1" role="dialog" aria-labelledby="registrationModalLabel" style="display: none;" data-bs-backdrop="static"
+         data-bs-keyboard="false">
 
-    @*For Delete POP up*@
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registrationModalLabel">User Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Placeholder for partial view -->
+                <div id="registrationModalContent"></div>
 
-    @*For Active Pop-up*@
-    <div class="modal fade" id="userDetailsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        @await Html.PartialAsync("_View")
-
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
+
+
     <script>
         $(document).ready(function () {
             $('#myTable').DataTable({ "paging": false });
         });
-       
+
+
+
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(".view-button").on("click", function () {
+                var loginUserId = $(this).data("id");
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("GetUserDetails", "Auth")',
+                    data: { id: $(this).data("id") },
+                success: function (data) {
+                    // Replace the content of the modal with the loaded partial view                   
+                    $('#registrationModalContent').html(data);
+                    // Show the modal                   
+                    $('#registrationModal').modal('show');
+                }
+                })
+            });
+        });
+
 
     </script>
 
@@ -167,9 +195,6 @@
 
 
 
-
-
-    </script>
     <nav aria-label="Page navigation example" style="float: right;margin-top: -25px;">
         <ul class="pagination">
             @if (Model.CurrentPage > 1)

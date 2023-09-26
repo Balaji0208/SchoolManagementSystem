@@ -30,5 +30,7 @@ namespace SchoolManagementSystem.Data
 
         public DbSet<DistrictMaster> DistrictMaster { get; set; }
         public DbSet<StateMaster> StateMaster { get; set; }
+             public DbSet<Module> Module { get; set; }
+        public DbSet<ModuleRoleMapping> ModuleRoleMapping { get; set; }
     }
 }

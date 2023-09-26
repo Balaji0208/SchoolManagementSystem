@@ -13,10 +13,11 @@ namespace SchoolManagementSystem
             CreateMap<LoginRequestDTO, UserDTO>().ReverseMap();
             CreateMap<RegistrationDTO, Register>().ReverseMap();
             CreateMap<CountryMasterDTO, CountryMaster>().ReverseMap();
-
+            CreateMap<ModuleDTO, Module>().ReverseMap();
             CreateMap<StateMasterDTO, StateMaster>().ReverseMap();
             CreateMap<CategoryDTO, Categories>().ReverseMap();
-
+            CreateMap<ModuleRoleMappingDTO, ModuleRoleMapping>().ReverseMap();
+            CreateMap<ModuleRoleMapping, User>().ReverseMap();
             CreateMap<RegistrationDTO, UserDTO>().ReverseMap();
         }
     }

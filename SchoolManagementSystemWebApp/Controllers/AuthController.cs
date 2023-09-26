@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Security.Claims;
+using System.Web.Helpers;
 
 namespace SchoolManagementSystemWebApp.Controllers
 {
@@ -23,38 +24,42 @@ namespace SchoolManagementSystemWebApp.Controllers
     {
         private readonly IAuthService _authService;
         private readonly ICategoryService _categoryService;
+        private readonly IRoleService _roleService;
         private readonly ICountryService _countryService;
         private readonly IStateService _stateService;
+        private readonly IModuleRoleMappingService _moduleroleService;
 
 
-        public AuthController(IAuthService authService, ICategoryService categoryService,ICountryService countryService,IStateService stateService)
+        public AuthController(IAuthService authService, ICategoryService categoryService, ICountryService countryService, IStateService stateService, IModuleRoleMappingService moduleroleService)
         {
             _authService = authService;
             _categoryService = categoryService;
             _countryService = countryService;
             _stateService = stateService;
-           
+            _moduleroleService = moduleroleService;
+
+
 
         }
-        [Authorize(Roles ="Admin,Register")]
-        public async Task<IActionResult> IndexRegister(int currentPage = 1,string orederBy="",string term="")
+        [Authorize(Roles = "Admin,Register")]
+        public async Task<IActionResult> IndexRegister(int  currentPage = 1, string orederBy = "")
         {
-            RegisterPaginationVM registerVM = new RegisterPaginationVM(); 
-          
-            IEnumerable<RegistrationDTO> list = null  ;
+            RegisterPaginationVM registerVM = new RegisterPaginationVM();
+
+            IEnumerable<RegistrationDTO> list = new List<RegistrationDTO>();
 
             var response = await _authService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SeesionToken));
             if (response != null && response.IsSuccess)
             {
                 list = JsonConvert.DeserializeObject<List<RegistrationDTO>>(Convert.ToString(response.Result));
             }
-          
+
             int totalRecords = list.Count();
             int pageSize = 5;
             int totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
             list = list.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
             registerVM.Register = list;
-            
+
             registerVM.CurrentPage = currentPage;
             registerVM.PageSize = pageSize;
             registerVM.TotalPages = totalPages;
@@ -77,6 +82,7 @@ namespace SchoolManagementSystemWebApp.Controllers
             if (response != null && response.IsSuccess)
             {
                 LoginResponseDTO model = JsonConvert.DeserializeObject<LoginResponseDTO>(Convert.ToString(response.Result));
+                var roleID =  model.User.RoleId;
 
                 var handler = new JwtSecurityTokenHandler();
                 var jwt = handler.ReadJwtToken(model.Token);
@@ -87,10 +93,24 @@ namespace SchoolManagementSystemWebApp.Controllers
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
+                int Id = 0;
+
                 
+
+                List<ModuleRoleMappingDTO> menuRoleMappingDTO = new();
+                var menuResponse = await _moduleroleService.GetMenuAsync<APIResponse>(roleID,HttpContext.Session.GetString(SD.SeesionToken));
+                if (menuResponse != null && menuResponse.IsSuccess) 
+                { 
+                    menuRoleMappingDTO = JsonConvert.DeserializeObject<List<ModuleRoleMappingDTO>>(Convert.ToString(menuResponse.Result)); 
+                }
+
+                HttpContext.Session.SetString("Menus", menuResponse.Result.ToString());
                 HttpContext.Session.SetString(SD.SeesionToken, model.Token);
                 return RedirectToAction("Index", "Home");
+
+
             }
+
             else
             {
                 TempData["error"] = "Error encountered";
@@ -129,17 +149,17 @@ namespace SchoolManagementSystemWebApp.Controllers
             return View(RegistrationMasterVM);
         }
 
-        public async Task<IActionResult> GetUserDetails(int id) 
+        public async Task<IActionResult> GetUserDetails(int id)
         {
             RegisterPaginationVM registerVM = new RegisterPaginationVM();
             RegistrationDTO user;
-            var response = await _authService.GetAsync<APIResponse>(id, HttpContext.Session.GetString(SD.SeesionToken)); 
-            if (response != null) 
-            { 
+            var response = await _authService.GetAsync<APIResponse>(id, HttpContext.Session.GetString(SD.SeesionToken));
+            if (response != null)
+            {
                 user = JsonConvert.DeserializeObject<RegistrationDTO>(Convert.ToString(response.Result));
                 registerVM.RegisterById = user;
                 return PartialView("_View", registerVM);
-             
+
 
             }
             return PartialView("_View", null);
@@ -148,14 +168,15 @@ namespace SchoolManagementSystemWebApp.Controllers
         }
 
 
-        public async Task<JsonResult> GetStateByCountryId(int countryId) 
-        { 
-            var response = await _stateService.GetStateAsync<APIResponse>(countryId,HttpContext.Session.GetString(SD.SeesionToken)); 
-            if (response != null) 
-            { List<StateMasterDTO> states = JsonConvert.DeserializeObject<List<StateMasterDTO>>(Convert.ToString(response.Result)); 
-                return Json(states); 
-            } 
-            return Json(null); 
+        public async Task<JsonResult> GetStateByCountryId(int countryId)
+        {
+            var response = await _stateService.GetStateAsync<APIResponse>(countryId, HttpContext.Session.GetString(SD.SeesionToken));
+            if (response != null)
+            {
+                List<StateMasterDTO> states = JsonConvert.DeserializeObject<List<StateMasterDTO>>(Convert.ToString(response.Result));
+                return Json(states);
+            }
+            return Json(null);
         }
         public async Task<JsonResult> Search(string Prefix)
         {
@@ -169,7 +190,8 @@ namespace SchoolManagementSystemWebApp.Controllers
             return Json(null);
 
         }
-        [Authorize(Roles = "Admin,Register")]
+
+    [Authorize(Roles = "Admin,Register")]
         public async Task<IActionResult> EnableRegistration(int registrationId)
         {
             if (ModelState.IsValid)
@@ -193,19 +215,19 @@ namespace SchoolManagementSystemWebApp.Controllers
         [Authorize(Roles = "Admin,Register")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-      
+
         public async Task<IActionResult> Register(RegistrationViewModel obj)
         {
             if (ModelState.IsValid)
             {
 
                 APIResponse result = await _authService.RegisterAsync<APIResponse>(obj.Registration, HttpContext.Session.GetString(SD.SeesionToken));
-            if (result != null && result.IsSuccess)
-            {
+                if (result != null && result.IsSuccess)
+                {
                     TempData["success"] = "Registered successfully";
                     return RedirectToAction(nameof(IndexRegister));
                 }
-           
+
             }
             TempData["error"] = "Error encountered.";
             return View(obj);
@@ -265,8 +287,8 @@ namespace SchoolManagementSystemWebApp.Controllers
 
             return View(RegistrationMasterVM);
         }
-            
-        
+
+
         [Authorize(Roles = "Admin,Register")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -288,7 +310,7 @@ namespace SchoolManagementSystemWebApp.Controllers
 
 
 
-       
+
         public async Task<IActionResult> DeleteRegister(int regId)
         {
 
@@ -303,9 +325,9 @@ namespace SchoolManagementSystemWebApp.Controllers
         }
 
 
-    
 
-    public async Task<IActionResult> Logout()
+
+        public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
             HttpContext.Session.SetString(SD.SeesionToken, "");
@@ -315,6 +337,28 @@ namespace SchoolManagementSystemWebApp.Controllers
         public IActionResult AccessDenied()
         {
             return View();
+
         }
+
+     
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public async Task<IActionResult> DisPlaymenu(ModuleRoleMappingDTO model)
+        {
+
+            if (ModelState.IsValid)
+            {
+
+                    return PartialView("_GetAllMenuByRoleId", model);
+                
+            }
+            return (null);
+        }
+        
     }
+
+
+    
 }

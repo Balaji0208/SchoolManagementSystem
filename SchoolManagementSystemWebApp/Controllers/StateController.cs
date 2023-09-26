@@ -25,12 +25,13 @@ namespace SchoolManagementSystemWebApp.Controllers
             _stateService = stateService;
             _countryService = countryService;
         }
+        [Authorize(Roles = "Admin")]
 
         public async Task<IActionResult> IndexState(int currentPage = 1, string orederBy = "", string term = "")
             {
             StatePaginationVM stateVM = new StatePaginationVM();
 
-            IEnumerable<StateMasterDTO> list = null;
+            IEnumerable<StateMasterDTO> list = new List<StateMasterDTO>();
 
             var response = await _stateService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SeesionToken));
             if (response != null && response.IsSuccess)

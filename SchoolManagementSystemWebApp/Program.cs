@@ -19,6 +19,10 @@ builder.Services.AddHttpClient<IStateService, StateService>();
 builder.Services.AddScoped<IStateService, StateService>();
 builder.Services.AddHttpClient<ICountryService, CountryService>();
 builder.Services.AddScoped<ICountryService, CountryService>();
+builder.Services.AddHttpClient<IModuleRoleMappingService, ModuleRoleMappingService>();
+builder.Services.AddScoped<IModuleRoleMappingService, ModuleRoleMappingService>();
+builder.Services.AddHttpClient<IModuleService, ModuleService>();
+builder.Services.AddScoped<IModuleService, ModuleService>();
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

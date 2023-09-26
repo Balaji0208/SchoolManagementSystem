@@ -1,0 +1,54 @@
+﻿@model SchoolManagementSystemWebApp.VM.ModulesVM
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<form asp-action="CreateModule">
+
+    <h1 class="text-primary">Create Module</h1>
+    
+    <div class="row mt-3">
+        <div class="col-md-4 ">
+            <div>
+                <label for="moduleName">Module Name</label>
+                <input type="text" asp-for="modulesVM.Menus" class="form-control" />
+                <span asp-validation-for="modulesVM.Menus" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-4 ">
+            <div>
+                <label for="moduleName">URL</label>
+                <input type="text" asp-for="modulesVM.Url" class="form-control" />
+                <span asp-validation-for="modulesVM.Url" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+  
+    <div class="row mt-3">
+        <div class="col-md-4 ">
+            <div class="form-group">
+                <label for="role">Parent Menu</label>
+
+                <select asp-for="modulesVM.ParentId" class="form-control" asp-items="@Model.ParentList">
+                    <option disabled selected>--Select Menu--</option>
+                </select>
+
+                <span asp-validation-for="modulesVM.ParentId" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-2 text-center">
+            <button type="submit" class="btn-lg btn-success" style="margin-left:-337px;margin-top:14px">Save</button>
+        </div>
+        <div class="col-2 justify-content-end">
+            <a asp-action="IndexModule" asp-controller="Module" class="btn btn-secondary btn-lg" style="margin-left:-431px;margin-top:15px">Cancel</a>
+        </div>
+    </div>
+    
+</form>
+@section Scripts   
+    {   
+    <partial name="_ValidationScriptsPartial" />
+                        }

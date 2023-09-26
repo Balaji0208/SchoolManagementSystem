@@ -25,12 +25,12 @@ namespace SchoolManagementSystemWebApp.Controllers
             _countryService = countryService;
 
         }
-
-        public async Task<IActionResult> IndexCountry(int currentPage = 1, string orederBy = "", string term = "")
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> IndexCountry(int currentPage =1, string orederBy = "", string term = "")
         {
             CountryPaginationVM countryVM = new CountryPaginationVM();
 
-            IEnumerable<CountryMasterDTO> list = null;
+            IEnumerable<CountryMasterDTO> list = new List<CountryMasterDTO>();
 
             var response = await _countryService.GetAllAsync<APIResponse>(HttpContext.Session.GetString(SD.SeesionToken));
             if (response != null && response.IsSuccess)

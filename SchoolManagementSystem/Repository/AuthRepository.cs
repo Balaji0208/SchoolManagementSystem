@@ -98,6 +98,7 @@ namespace SchoolManagementSystem.Repository
                 var user = _db.Users.FirstOrDefault(u => u.UserName.ToLower() == LoginRequestDTO.UserName.ToLower());
 
                 var Role = _db.RoleDetails.Where(u => u.RoleId == user.RoleId).Select(u => u.RoleName).FirstOrDefault();
+               
                 //var userid = _db.Users.Where(u => u.UserName == user.UserName).Select(u => u.UserId).FirstOrDefault();
                 var userRegistrationFromDb = _db.Register.FirstOrDefault(u => u.registerId == user.registerId);
 

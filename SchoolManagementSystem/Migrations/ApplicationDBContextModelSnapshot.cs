@@ -154,6 +154,83 @@ namespace SchoolManagementSystem.Migrations
                     b.ToTable("DistrictMaster");
                 });
 
+            modelBuilder.Entity("SchoolManagementSystem.Models.Module", b =>
+                {
+                    b.Property<int>("ModuleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ModuleId"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Menus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("StatusFlag")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ModuleId");
+
+                    b.ToTable("Module");
+                });
+
+            modelBuilder.Entity("SchoolManagementSystem.Models.ModuleRoleMapping", b =>
+                {
+                    b.Property<int>("RoleMapId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleMapId"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ModuleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("StatusFlag")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("RoleMapId");
+
+                    b.HasIndex("ModuleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("ModuleRoleMapping");
+                });
+
             modelBuilder.Entity("SchoolManagementSystem.Models.Register", b =>
                 {
                     b.Property<int>("registerId")
@@ -390,6 +467,25 @@ namespace SchoolManagementSystem.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("SchoolManagementSystem.Models.ModuleRoleMapping", b =>
+                {
+                    b.HasOne("SchoolManagementSystem.Models.Module", "Module")
+                        .WithMany()
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SchoolManagementSystem.Models.RoleDetails", "RoleDetails")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Module");
+
+                    b.Navigation("RoleDetails");
+                });
+
             modelBuilder.Entity("SchoolManagementSystem.Models.Register", b =>
                 {
                     b.HasOne("SchoolManagementSystem.Models.CountryMaster", "CountryMaster")
@@ -419,13 +515,13 @@ namespace SchoolManagementSystem.Migrations
 
             modelBuilder.Entity("SchoolManagementSystem.Models.StateMaster", b =>
                 {
-                    b.HasOne("SchoolManagementSystem.Models.CountryMaster", "Country")
+                    b.HasOne("SchoolManagementSystem.Models.CountryMaster", "CountryMaster")
                         .WithMany()
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Country");
+                    b.Navigation("CountryMaster");
                 });
 
             modelBuilder.Entity("SchoolManagementSystem.Models.User", b =>
